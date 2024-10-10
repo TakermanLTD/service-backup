@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Takerman.Backup.Services", "Takerman.Backup.Services\Takerman.Backup.Services.csproj", "{B70EAFA2-9867-4ACC-A28B-B7962056833C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Takerman.Backup.Server", "Takerman.Backup.Server\Takerman.Backup.Server.csproj", "{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Takerman.Backup.Data", "Takerman.Backup.Data\Takerman.Backup.Data.csproj", "{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "takerman.tackup.client", "takerman.tackup.client\takerman.tackup.client.esproj", "{6546A3B0-B349-4A58-92E4-DA0B83C093DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Takerman.Backup.Models", "Takerman.Backup.Models\Takerman.Backup.Models.csproj", "{FCD104CB-0FDB-44D2-9174-29312F69DF09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Takerman.Backup.Tests", "Takerman.Backup.Tests\Takerman.Backup.Tests.csproj", "{04E1707A-F1E7-4F1C-9D3E-D93742313F71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B70EAFA2-9867-4ACC-A28B-B7962056833C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B70EAFA2-9867-4ACC-A28B-B7962056833C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B70EAFA2-9867-4ACC-A28B-B7962056833C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B70EAFA2-9867-4ACC-A28B-B7962056833C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FCD104CB-0FDB-44D2-9174-29312F69DF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCD104CB-0FDB-44D2-9174-29312F69DF09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCD104CB-0FDB-44D2-9174-29312F69DF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCD104CB-0FDB-44D2-9174-29312F69DF09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04E1707A-F1E7-4F1C-9D3E-D93742313F71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04E1707A-F1E7-4F1C-9D3E-D93742313F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04E1707A-F1E7-4F1C-9D3E-D93742313F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04E1707A-F1E7-4F1C-9D3E-D93742313F71}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E9DA4440-A41C-43D3-83C3-421974F94911}
+	EndGlobalSection
+EndGlobal
