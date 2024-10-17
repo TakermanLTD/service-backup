@@ -1,12 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Net;
-using Takerman.Backup.Data;
-using Takerman.Backup.Data.Initialization;
-using Takerman.Backup.Models.Configuration;
 using Takerman.Backup.Server.Middleware;
 using Takerman.Backup.Services;
-using Takerman.Backup.Services.Abstraction;
 using Takerman.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,13 +30,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
-builder.Services.AddDbContext<DefaultContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Takerman.Backup.Data")));
-builder.Services.AddTransient<DbContext, DefaultContext>();
-builder.Services.AddTransient<IContextInitializer, ContextInitializer>();
-builder.Services.AddTransient<ITemplateService, TemplateService>();
+builder.Services.AddTransient<IDatabaseService, DatabaseService>();
 builder.Services.AddTransient<IMailService, MailService>();
-builder.Services.Configure<RabbitMqConfig>(builder.Configuration.GetSection(nameof(RabbitMqConfig)));
-builder.Services.Configure<TemplateConfig>(builder.Configuration.GetSection(nameof(TemplateConfig)));
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;
@@ -51,9 +42,6 @@ builder.Services.AddHsts(options =>
 });
 
 var app = builder.Build();
-
-using var scope = app.Services.CreateAsyncScope();
-await scope.ServiceProvider.GetRequiredService<IContextInitializer>().InitializeAsync();
 
 app.UseDefaultFiles();
 

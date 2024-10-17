@@ -7,13 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Takerman.Backup.Services", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Takerman.Backup.Server", "Takerman.Backup.Server\Takerman.Backup.Server.csproj", "{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Takerman.Backup.Data", "Takerman.Backup.Data\Takerman.Backup.Data.csproj", "{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}"
-EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "takerman.tackup.client", "takerman.tackup.client\takerman.tackup.client.esproj", "{6546A3B0-B349-4A58-92E4-DA0B83C093DB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Takerman.Backup.Models", "Takerman.Backup.Models\Takerman.Backup.Models.csproj", "{FCD104CB-0FDB-44D2-9174-29312F69DF09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Takerman.Backup.Tests", "Takerman.Backup.Tests\Takerman.Backup.Tests.csproj", "{04E1707A-F1E7-4F1C-9D3E-D93742313F71}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "takerman.backup.client", "takerman.backup.client\takerman.backup.client.esproj", "{390B5689-2EDC-416E-8FF9-30C0F01F89FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,16 +27,6 @@ Global
 		{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C394436C-5BE8-4E84-BF1C-C776EED1AEB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE6F1DE2-98F1-4AC6-9052-C54FF9879772}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6546A3B0-B349-4A58-92E4-DA0B83C093DB}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{FCD104CB-0FDB-44D2-9174-29312F69DF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FCD104CB-0FDB-44D2-9174-29312F69DF09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCD104CB-0FDB-44D2-9174-29312F69DF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,6 +35,12 @@ Global
 		{04E1707A-F1E7-4F1C-9D3E-D93742313F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04E1707A-F1E7-4F1C-9D3E-D93742313F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04E1707A-F1E7-4F1C-9D3E-D93742313F71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{390B5689-2EDC-416E-8FF9-30C0F01F89FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{390B5689-2EDC-416E-8FF9-30C0F01F89FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{390B5689-2EDC-416E-8FF9-30C0F01F89FF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{390B5689-2EDC-416E-8FF9-30C0F01F89FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{390B5689-2EDC-416E-8FF9-30C0F01F89FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{390B5689-2EDC-416E-8FF9-30C0F01F89FF}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

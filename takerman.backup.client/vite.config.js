@@ -44,12 +44,12 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/Home': {
-                target: 'https://localhost:5178/',
+            '^/Backups': {
+                target: 'https://localhost:5180/',
                 secure: false
             }
         },
-        port: 5178,
+        port: 5180,
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),

@@ -1,12 +1,10 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Takerman.Backup.Data
 {
     public class DefaultContext(DbContextOptions options) : DbContext(options)
     {
-        public DbSet<TemplateEntity> Templates { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

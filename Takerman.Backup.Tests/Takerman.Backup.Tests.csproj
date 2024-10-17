@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Takerman.Backup.Data\Takerman.Backup.Data.csproj" />
     <ProjectReference Include="..\Takerman.Backup.Models\Takerman.Backup.Models.csproj" />
     <ProjectReference Include="..\Takerman.Backup.Server\Takerman.Backup.Server.csproj" />
   </ItemGroup>

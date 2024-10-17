@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Takerman.Backup.Data\Takerman.Backup.Data.csproj" />
+    <Folder Include="Configuration\" />
   </ItemGroup>
 
 </Project>
