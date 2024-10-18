@@ -29,10 +29,10 @@ RUN echo "user.name=takerman" > .npmrc
 RUN echo "user.username=takerman" > .npmrc
 RUN npm install --production
 
-WORKDIR "/src/Takerman.Backup.Tests"
+WORKDIR "/src/Takerman.Backups.Tests"
 RUN dotnet test
 
-WORKDIR "/src/Takerman.Backup.Server"
+WORKDIR "/src/Takerman.Backups.Server"
 RUN dotnet clean && dotnet restore && dotnet build -c $BUILD_CONFIGURATION -o /app/build
 RUN rm -f .npmrc
 
@@ -43,4 +43,4 @@ RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Takerman.Backup.Server.dll"]
+ENTRYPOINT ["dotnet", "Takerman.Backups.Server.dll"]
