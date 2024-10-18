@@ -1,7 +1,8 @@
 {
   "name": "takerman.backups.client",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "private": false,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
