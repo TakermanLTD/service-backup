@@ -55,7 +55,7 @@ jobs:
       - name: E2E tests
         uses: cypress-io/github-action@v6
         with:
-          working-directory: ./takerman.tackup.client
+          working-directory: ./takerman.backups.client
           config: baseUrl=https://takerman.net
           build: npm run build
           start: npm run dev
