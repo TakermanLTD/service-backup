@@ -7,6 +7,9 @@ RUN apt update && apt install -y curl gnupg libpng-dev libjpeg-dev curl libxi6 b
 RUN curl -fsSL https://deb.nodesource.com/nsolid_setup_deb.sh | sh -s 20
 RUN apt-get install -y nodejs
 
+RUN dotnet dev-certs https --clean
+RUN dotnet dev-certs https --trust --export-path /https/aspnetcore-https.pem --no-password
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ENV ASPNETCORE_ENVIRONMENT=Production
 WORKDIR /src
@@ -17,6 +20,10 @@ ARG BUILD_CONFIGURATION=Release
 ARG NUGET_PASSWORD
 
 COPY . .
+
+ENV ASPNETCORE_URLS=https://+:443;http://+:80
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetcore-https.pem
+
 COPY ["takerman.backups.client/nuget.config", "./"]
 COPY ["takerman.backups.client/package.json", "package.json"]
 
