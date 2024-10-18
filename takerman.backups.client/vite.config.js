@@ -42,6 +42,16 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
+    build: {
+        sourcemap: true,
+        rollupOptions: {
+            output: {
+                entryFileNames: `format-chunk[hash]-[contenthash].js`,
+                chunkFileNames: `format-chunk[hash]-[contenthash].js`,
+                assetFileNames: `format-[hash][ext][query]`
+            }
+        }
+    },
     server: {
         proxy: {
             '^/Backups': {
