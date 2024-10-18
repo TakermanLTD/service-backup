@@ -38,7 +38,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Takerman.Backups.Services\Takerman.Backups.Services.csproj" />
-		<ProjectReference Include="..\takerman.backups.client\takerman.tackup.client.esproj">
+		<ProjectReference Include="..\takerman.backups.client\takerman.backups.client.esproj">
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
 	</ItemGroup>
