@@ -17,8 +17,8 @@ ARG BUILD_CONFIGURATION=Release
 ARG NUGET_PASSWORD
 
 COPY . .
-COPY ["takerman.tackup.client/nuget.config", "./"]
-COPY ["takerman.tackup.client/package.json", "package.json"]
+COPY ["takerman.backups.client/nuget.config", "./"]
+COPY ["takerman.backups.client/package.json", "package.json"]
 
 RUN sed -i "s|</configuration>|<packageSourceCredentials><github><add key=\"Username\" value=\"takerman\"/><add key=\"ClearTextPassword\" value=\"${NUGET_PASSWORD}\"/></github></packageSourceCredentials></configuration>|" nuget.config
 RUN dotnet nuget add source https://nuget.pkg.github.com/takermanltd/index.json --name github
