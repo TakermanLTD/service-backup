@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 ENV ASPNETCORE_ENVIRONMENT=Production
 WORKDIR /app
 EXPOSE 80
@@ -7,7 +7,7 @@ RUN apt update && apt install -y curl gnupg libpng-dev libjpeg-dev curl libxi6 b
 RUN curl -fsSL https://deb.nodesource.com/nsolid_setup_deb.sh | sh -s 20
 RUN apt-get install -y nodejs
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ENV ASPNETCORE_ENVIRONMENT=Production
 WORKDIR /src
 RUN apt update && apt install -y curl libpng-dev libjpeg-dev curl libxi6 build-essential libgl1-mesa-glx

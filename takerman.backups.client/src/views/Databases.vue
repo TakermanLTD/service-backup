@@ -4,9 +4,7 @@
             <button class="btn btn-info" @click="backupAll()">Backup All</button>
         </div>
         <div class="row">
-            <p>
             <h2 class="text-center">Databases</h2>
-            </p>
             <p>
                 <strong class="text-center">{{ state }}</strong>
             </p>

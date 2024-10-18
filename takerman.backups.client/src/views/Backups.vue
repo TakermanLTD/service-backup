@@ -5,9 +5,7 @@
             <button class="btn btn-info" @click="removeAll()">Delete All</button>
         </div>
         <div class="row">
-            <p>
             <h2 class="text-center">Backups</h2>
-            </p>
             <p>
                 <strong class="text-center">{{ this.state }}</strong>
             </p>
@@ -47,7 +45,7 @@ export default {
     methods: {
         async getForDatabase() {
             this.state = 'loading';
-            this.backups = await(await fetch('/Backups/GetForDatabase?database=' + this.database)).json();
+            this.backups = await (await fetch('/Backups/GetForDatabase?database=' + this.database)).json();
 
             if (!this.backups || this.backups.length == 0)
                 this.state = 'no backups';
@@ -55,25 +53,25 @@ export default {
                 this.state = '';
         },
         async backup() {
-            let result = await(await fetch('/Backups/Backup?database=' + this.database + "&incremental=" + false)).json();
+            let result = await (await fetch('/Backups/Backup?database=' + this.database + "&incremental=" + false)).json();
             if (result)
                 this.state = 'backup finished';
             this.getForDatabase();
         },
         async restore(backup) {
-            let result = await(await fetch('/Backups/Restore?backup=' + backup + "&database=" + this.database)).json();
+            let result = await (await fetch('/Backups/Restore?backup=' + backup + "&database=" + this.database)).json();
             if (result)
                 this.state = 'restore finished';
             this.getForDatabase();
         },
         async remove(backup) {
-            let result = await(await fetch('/Backups/Delete?database=' + this.database + '&backupSetId=' + backup.backupSetId)).json();
+            let result = await (await fetch('/Backups/Delete?database=' + this.database + '&backupSetId=' + backup.backupSetId)).json();
             if (result)
                 this.state = 'removed';
             this.getForDatabase();
         },
         async removeAll() {
-            let result = await(await fetch('/Backups/DeleteAll?database=' + this.database)).json();
+            let result = await (await fetch('/Backups/DeleteAll?database=' + this.database)).json();
             if (result)
                 this.state = 'removed all';
             this.getForDatabase();
