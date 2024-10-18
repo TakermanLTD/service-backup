@@ -16,14 +16,7 @@ RUN apt-get install -y nodejs
 ARG BUILD_CONFIGURATION=Release
 ARG NUGET_PASSWORD
 
-RUN dotnet dev-certs https --clean
-RUN dotnet dev-certs https --trust --export-path /https/aspnetcore-https.pem --password "Tako1991!"
-
 COPY . .
-
-ENV ASPNETCORE_URLS=https://+:443;http://+:80
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetcore-https.pem
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password="Tako1991!"
 
 COPY ["takerman.backups.client/nuget.config", "./"]
 COPY ["takerman.backups.client/package.json", "package.json"]
