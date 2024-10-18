@@ -5,7 +5,6 @@ using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Server.Middleware;
 using Takerman.Backups.Services.Abstraction;
 using Takerman.Backupss.Services;
-using Takerman.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -31,7 +30,6 @@ builder.Services.AddProblemDetails();
 builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection(nameof(ConnectionStrings)));
 builder.Services.AddTransient<IDatabasesService, DatabasesService>();
 builder.Services.AddTransient<IBackupsService, BackupsService>();
-builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;
