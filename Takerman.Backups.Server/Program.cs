@@ -1,14 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.Slack.Models;
-using Serilog.Sinks.Slack;
 using System.Net;
 using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Server.Middleware;
 using Takerman.Backups.Services.Abstraction;
 using Takerman.Backupss.Services;
-using Serilog.Exceptions;
+using Takerman.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -19,17 +15,8 @@ builder.Configuration
 
 var hostname = Dns.GetHostName();
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Warning()
-    .WriteTo.Console()
-    .WriteTo.Slack("https://hooks.slack.com/services/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", restrictedToMinimumLevel: LogEventLevel.Error)
-    .Enrich.WithMachineName()
-    .Enrich.WithEnvironmentName()
-    .Enrich.WithExceptionDetails()
-    .CreateLogger();
-
-builder.Host.UseSerilog(Log.Logger);
-builder.Logging.AddSerilog(Log.Logger);
+builder.Host.AddTakermanLogging();
+builder.Logging.AddTakermanLogging();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
