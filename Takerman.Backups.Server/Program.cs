@@ -24,7 +24,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.Slack(new SlackSinkOptions
     {
-        WebHookUrl = Environment.GetEnvironmentVariable("SLACK_EXCEPTIONS"),
+        WebHookUrl = Environment.GetEnvironmentVariable("SLACK_WEBHOOK_URL"),
         CustomIcon = ":dvd:",
         Period = TimeSpan.FromSeconds(10),
         ShowDefaultAttachments = false,
