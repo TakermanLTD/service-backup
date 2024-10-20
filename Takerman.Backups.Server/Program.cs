@@ -24,7 +24,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Slack(new SlackSinkOptions
     {
         WebHookUrl = "https://hooks.slack.com/services/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",
-        CustomIcon = ":ghost:",
+        CustomIcon = ":dvd:",
         Period = TimeSpan.FromSeconds(10),
         ShowDefaultAttachments = false,
         ShowExceptionAttachments = true,
