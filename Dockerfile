@@ -15,6 +15,8 @@ RUN curl -fsSL https://deb.nodesource.com/nsolid_setup_deb.sh | sh -s 20
 RUN apt-get install -y nodejs
 ARG BUILD_CONFIGURATION=Release
 ARG NUGET_PASSWORD
+ARG SLACK_EXCEPTIONS
+ENV SLACK_WEBHOOK_URL=SLACK_EXCEPTIONS
 
 COPY . .
 
