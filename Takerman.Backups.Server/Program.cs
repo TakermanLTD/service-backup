@@ -1,10 +1,13 @@
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.Slack.Models;
+using Serilog.Sinks.Slack;
 using System.Net;
 using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Server.Middleware;
 using Takerman.Backups.Services.Abstraction;
 using Takerman.Backupss.Services;
-using Takerman.Logging;
+using Serilog.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -15,8 +18,26 @@ builder.Configuration
 
 var hostname = Dns.GetHostName();
 
-builder.Host.AddTakermanLogging();
-builder.Logging.AddTakermanLogging();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Warning()
+    .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.Console()
+    .WriteTo.Slack(new SlackSinkOptions
+    {
+        WebHookUrl = Environment.GetEnvironmentVariable("SLACK_EXCEPTIONS"),
+        CustomIcon = ":dvd:",
+        Period = TimeSpan.FromSeconds(10),
+        ShowDefaultAttachments = false,
+        ShowExceptionAttachments = true,
+        MinimumLogEventLevel = LogEventLevel.Error,
+        PropertyDenyList = ["Level", "SourceContext"]
+    })
+    .Enrich.WithEnvironmentName()
+    .Enrich.WithExceptionDetails()
+    .CreateLogger();
+
+builder.Logging.AddSerilog(Log.Logger);
+builder.Host.UseSerilog(Log.Logger);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
