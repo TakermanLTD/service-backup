@@ -51,7 +51,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            SLACK_WEB_HOOK=${{ secrets.SLACK_EXCEPTIONS }}
+            SLACK_EXCEPTIONS=${{ secrets.SLACK_EXCEPTIONS }}
             NUGET_PASSWORD=${{ secrets.REGISTRY_TOKEN }}
 
       # - name: E2E tests
