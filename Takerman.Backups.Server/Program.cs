@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.Slack.Models;
+using Serilog.Sinks.Slack;
 using System.Net;
 using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Server.Middleware;
@@ -18,6 +21,16 @@ var hostname = Dns.GetHostName();
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Warning()
     .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.Slack(new SlackSinkOptions
+    {
+        WebHookUrl = "https://hooks.slack.com/services/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",
+        CustomIcon = ":ghost:",
+        Period = TimeSpan.FromSeconds(10),
+        ShowDefaultAttachments = false,
+        ShowExceptionAttachments = true,
+        MinimumLogEventLevel = LogEventLevel.Error,
+        PropertyDenyList = ["Level", "SourceContext"]
+    })
     .CreateLogger();
 
 builder.Host.UseSerilog(Log.Logger);
