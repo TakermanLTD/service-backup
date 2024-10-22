@@ -11,8 +11,13 @@ namespace Takerman.Backupss.Services
 {
     public class BackupsService : IBackupsService
     {
-        public BackupsService(ILogger<BackupsService> _logger, IOptions<ConnectionStrings> _connectionStrings)
+        private readonly ILogger<BackupsService> _logger;
+        private readonly IOptions<ConnectionStrings> _connectionStrings;
+
+        public BackupsService(ILogger<BackupsService> logger, IOptions<ConnectionStrings> connectionStrings)
         {
+            _logger = logger;
+            _connectionStrings = connectionStrings;
             DbServer = new Server();
             DbServer.ConnectionContext.ConnectionString = _connectionStrings.Value.DefaultConnection;
             DbServer.ConnectionContext.Connect();
@@ -61,10 +66,18 @@ namespace Takerman.Backupss.Services
 
         public bool Delete(string backupName)
         {
-            var backup = GetAll().FirstOrDefault(x => x.Name == backupName);
-            File.Delete(backup.Location);
+            try
+            {
+                var backup = GetAll().FirstOrDefault(x => x.Name == backupName);
+                File.Delete(backup.Location);
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error when deleting database: " + ex.Message + (ex.InnerException != null ? ex.InnerException.Message : string.Empty));
+                return false;
+            }
         }
 
         public BackupDto Get(string backup)
