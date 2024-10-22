@@ -34,6 +34,7 @@ namespace Takerman.Backups.Server.Controllers
         [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
+            _logger.LogCritical("asdasd qweqwe zxczxc");
             var result = _databaseService.GetAll();
 
             return Ok(result);
