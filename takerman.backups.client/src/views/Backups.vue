@@ -11,7 +11,7 @@
             </p>
             <table class="table table-borderless">
                 <tr v-for="(backup, key) in this.backups" :key="key">
-                    <td>{{ backup.id }}</td>
+                    <td>{{ backup.created }}</td>
                     <td>{{ backup.name }}</td>
                     <td>{{ backup.location }}</td>
                     <td>{{ (backup.size / 1024).toFixed(2) }} MB</td>

@@ -1,23 +1,21 @@
-﻿using Microsoft.SqlServer.Management.Smo;
-using System.Data;
-using Takerman.Backups.Models.DTOs;
+﻿using Takerman.Backups.Models.DTOs;
 
 namespace Takerman.Backups.Services.Abstraction
 {
     public interface IBackupsService
     {
-        List<BackupDto> BackupAll(bool incremental);
+        BackupDto Backup(string database);
 
-        BackupDto Backup(string database, bool incremental);
+        List<BackupDto> BackupAll();
 
         bool Delete(string backupName);
+
+        bool DeleteAll(string database);
 
         BackupDto Get(string backup);
 
         List<BackupDto> GetAll(string database = "");
 
         bool Restore(string backup, string database);
-
-        bool DeleteAll(string database);
     }
 }

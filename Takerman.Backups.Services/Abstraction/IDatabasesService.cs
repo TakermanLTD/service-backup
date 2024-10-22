@@ -5,6 +5,8 @@ namespace Takerman.Backups.Services.Abstraction
 {
     public interface IDatabasesService
     {
+        bool Create(string database);
+
         bool Delete(string database);
 
         DatabaseDto Get(string database);
@@ -14,7 +16,5 @@ namespace Takerman.Backups.Services.Abstraction
         List<Database> GetAllAsEntity();
 
         Database GetAsEntity(string database);
-
-        bool Create(string database);
     }
 }

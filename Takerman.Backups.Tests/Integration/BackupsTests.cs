@@ -18,15 +18,15 @@ namespace Takerman.Backups.Tests.Integration
         [Fact(Skip = "Build")]
         public void Should_BackupAllDatabase_When_ConnectedToTheServer()
         {
-            var result = _backupsService.BackupAll(false);
+            var result = _backupsService.BackupAll();
 
             Assert.NotNull(result);
         }
 
-        [Fact(Skip = "Build")]
+        [Fact]
         public void Should_BackupDatabase_When_ConnectedToTheServer()
         {
-            var result = _backupsService.Backup("takerman_dating_dev", false);
+            var result = _backupsService.Backup("takerman_dating_dev");
 
             Assert.NotNull(result);
         }

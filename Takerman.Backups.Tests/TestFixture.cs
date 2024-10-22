@@ -13,6 +13,7 @@ namespace Takerman.Backups.Tests
         protected override void AddServices(IServiceCollection services, IConfiguration? configuration)
             => services
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)))
+                .Configure<CommonConfig>(configuration.GetSection(nameof(CommonConfig)))
                 .AddTransient<IDatabasesService, DatabasesService>()
                 .AddTransient<IBackupsService, BackupsService>();
 

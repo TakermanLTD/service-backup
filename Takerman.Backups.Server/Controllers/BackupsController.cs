@@ -32,17 +32,17 @@ namespace Takerman.Backups.Server.Controllers
         }
 
         [HttpGet("Backup")]
-        public IActionResult Backup(string database, bool incremental)
+        public IActionResult Backup(string database)
         {
-            var result = _backupsService.Backup(database, incremental);
+            var result = _backupsService.Backup(database);
 
             return Ok(result);
         }
 
         [HttpGet("BackupAll")]
-        public IActionResult BackupAll(bool incremental)
+        public IActionResult BackupAll()
         {
-            var result = _backupsService.BackupAll(incremental);
+            var result = _backupsService.BackupAll();
 
             return Ok(result);
         }
