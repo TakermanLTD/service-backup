@@ -65,7 +65,8 @@ export default {
             this.getForDatabase();
         },
         async remove(backup) {
-            let result = await (await fetch('/Backups/Delete?database=' + this.database + '&backupSetId=' + backup.backupSetId)).json();
+            debugger;
+            let result = await (await fetch('/Backups/Delete?backup=' + backup)).json();
             if (result)
                 this.state = 'removed';
             this.getForDatabase();
