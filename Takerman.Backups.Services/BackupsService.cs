@@ -34,13 +34,13 @@ namespace Takerman.Backupss.Services
             var backupName = $"{database}_{DateTime.Now.Year}_{DateTime.Now.Month}_{DateTime.Now.Day}_{DateTime.Now.Hour}.bak";
             var backupLocation = Path.Combine(_commonConfig.Value.BackupsLocation, backupName);
             ExecuteQuery($"BACKUP DATABASE {database} TO DISK {backupLocation}");
-            var fileInfo = new FileInfo(backupLocation);
+            // var fileInfo = new FileInfo(backupLocation);
             var result = new BackupDto
             {
-                Created = fileInfo.CreationTime,
+                Created = DateTime.Now, // fileInfo.CreationTime,
                 Location = backupLocation,
                 Name = backupName,
-                Size = fileInfo.Length / 1024
+                Size = 0 // fileInfo.Length / 1024
             };
 
             return result;
@@ -101,7 +101,7 @@ namespace Takerman.Backupss.Services
             var files = Directory.EnumerateFiles(_commonConfig.Value.BackupsLocation).ToList();
 
             if (!string.IsNullOrEmpty(database))
-                files = files.Where(x => x.Substring(x.LastIndexOf('\\')).StartsWith(database)).ToList();
+                files = files.Where(x => x.Contains('\\') && x[x.LastIndexOf('\\')..].StartsWith(database)).ToList();
 
             foreach (var row in files)
             {
