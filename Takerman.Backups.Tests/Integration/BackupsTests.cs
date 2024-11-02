@@ -1,3 +1,4 @@
+using Takerman.Backups.Services;
 using Takerman.Backups.Services.Abstraction;
 using Xunit.Abstractions;
 using Xunit.Microsoft.DependencyInjection.Abstracts;
@@ -6,12 +7,12 @@ namespace Takerman.Backups.Tests.Integration
 {
     public class BackupsTests : TestBed<TestFixture>
     {
-        private readonly ISqlService? _backupsService;
+        private readonly ISqlService? _sqlService;
 
         public BackupsTests(ITestOutputHelper testOutputHelper, TestFixture fixture)
         : base(testOutputHelper, fixture)
         {
-            _backupsService = _fixture.GetService<ISqlService>(_testOutputHelper);
+            _sqlService = _fixture.GetService<ISqlService>(_testOutputHelper);
         }
 
         [Fact(Skip = "Build")]
@@ -19,7 +20,7 @@ namespace Takerman.Backups.Tests.Integration
         {
             var record = await Record.ExceptionAsync(async () =>
             {
-                await _backupsService.BackupAsync("takerman_dating_dev");
+                await _sqlService.BackupAsync("takerman_dating_dev");
             });
 
             Assert.NotNull(record?.Message);
@@ -28,9 +29,22 @@ namespace Takerman.Backups.Tests.Integration
         [Fact(Skip = "Build")]
         public void Should_GetAllBackups_When_ConnectedToTheServer()
         {
-            var result = _backupsService.GetBackups("master");
+            var result = _sqlService.GetBackups("master");
 
             Assert.NotNull(result);
+        }
+
+        [Fact(Skip = "It doesn't work entirely on locahost")]
+        public async Task Should_BackupDailyDatabases_When_BackgroundServiceExecutes()
+        {
+            var record = await Record.ExceptionAsync(async () => 
+            {
+                var autoBackup = new AutoBackupService(_sqlService, null);
+                
+                await autoBackup.StartAsync(CancellationToken.None);
+            });
+
+            Assert.Null(record?.Message);
         }
     }
 }

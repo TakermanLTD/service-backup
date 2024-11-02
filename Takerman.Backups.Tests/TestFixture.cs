@@ -11,10 +11,12 @@ namespace Takerman.Backups.Tests
     public class TestFixture : TestBedFixture
     {
         protected override void AddServices(IServiceCollection services, IConfiguration? configuration)
-            => services
+        {
+            services
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)))
                 .Configure<CommonConfig>(configuration.GetSection(nameof(CommonConfig)))
                 .AddTransient<ISqlService, SqlService>();
+        }
 
         protected override ValueTask DisposeAsyncCore() => new();
 

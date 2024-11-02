@@ -24,6 +24,7 @@ builder.Services.AddProblemDetails();
 builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection(nameof(ConnectionStrings)));
 builder.Services.Configure<CommonConfig>(builder.Configuration.GetSection(nameof(CommonConfig)));
 builder.Services.AddTransient<ISqlService, SqlService>();
+builder.Services.AddHostedService<AutoBackupService>();
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;

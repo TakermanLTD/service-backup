@@ -23,5 +23,7 @@ namespace Takerman.Backups.Services.Abstraction
         Task RestoreDatabaseAsync(string databaseName, string backupFile);
 
         Task<List<T>> Select<T>(string query) where T : new();
+
+        void MaintainBackups();
     }
 }

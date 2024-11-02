@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using System.Reflection;
-using System.Text;
 using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Models.DTOs;
 using Takerman.Backups.Services.Abstraction;
@@ -13,8 +12,8 @@ namespace Takerman.Backups.Services
         public async Task BackupAsync(string databaseName)
         {
             var query = @$"
-DECLARE @BackupFileName NVARCHAR(255); 
-SET @BackupFileName = @FileName; 
+DECLARE @BackupFileName NVARCHAR(255);
+SET @BackupFileName = @FileName;
 BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
 
             var fileName = $"{_commonConfig.Value.BackupsLocation}{databaseName}_{DateTime.Now:yy_MM_dd_HH_mm}.bak";
@@ -106,11 +105,11 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
                 name AS Name,
                 state_desc AS State,
                 recovery_model_desc AS RecoveryModel,
-                (SELECT SUM(size * 8.0 / 1024) 
-                    FROM sys.master_files 
+                (SELECT SUM(size * 8.0 / 1024)
+                    FROM sys.master_files
                     WHERE type = 0 AND database_id = d.database_id) AS DataSizeMB,
-                    (SELECT SUM(size * 8.0 / 1024) 
-                     FROM sys.master_files 
+                    (SELECT SUM(size * 8.0 / 1024)
+                     FROM sys.master_files
                      WHERE type = 1 AND database_id = d.database_id) AS LogSizeMB
                  FROM sys.databases d");
 
@@ -138,7 +137,25 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
                 }
             }
 
-            return backupFiles;
+            return [.. backupFiles.OrderByDescending(x => x.Created)];
+        }
+
+        public void MaintainBackups()
+        {
+            var backupFiles = new DirectoryInfo(_commonConfig.Value.BackupsLocation)
+                .GetFiles("*.bak")
+                .OrderByDescending(f => f.CreationTime)
+                .ToList();
+
+            var dailyBackups = backupFiles.Take(10).ToList();
+            var monthlyBackups = backupFiles.Where(f => f.CreationTime > DateTime.Now.AddMonths(-5)).ToList();
+            var yearlyBackups = backupFiles.Where(f => f.CreationTime > DateTime.Now.AddYears(-3)).ToList();
+            var backupsToKeep = dailyBackups.Concat(monthlyBackups).Concat(yearlyBackups).Distinct().ToList();
+
+            foreach (var file in backupFiles.Except(backupsToKeep))
+            {
+                file.Delete();
+            }
         }
 
         public async Task RestoreDatabaseAsync(string databaseName, string backupFile)
