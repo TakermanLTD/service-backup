@@ -1,8 +1,8 @@
 using System.Net;
 using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Server.Middleware;
+using Takerman.Backups.Services;
 using Takerman.Backups.Services.Abstraction;
-using Takerman.Backupss.Services;
 using Takerman.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,8 +23,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection(nameof(ConnectionStrings)));
 builder.Services.Configure<CommonConfig>(builder.Configuration.GetSection(nameof(CommonConfig)));
-builder.Services.AddTransient<IDatabasesService, DatabasesService>();
-builder.Services.AddTransient<IBackupsService, BackupsService>();
+builder.Services.AddTransient<ISqlService, SqlService>();
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;

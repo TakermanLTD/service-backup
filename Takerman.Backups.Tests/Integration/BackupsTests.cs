@@ -6,35 +6,29 @@ namespace Takerman.Backups.Tests.Integration
 {
     public class BackupsTests : TestBed<TestFixture>
     {
-        private readonly IBackupsService? _backupsService;
-
+        private readonly ISqlService? _backupsService;
 
         public BackupsTests(ITestOutputHelper testOutputHelper, TestFixture fixture)
         : base(testOutputHelper, fixture)
         {
-            _backupsService = _fixture.GetService<IBackupsService>(_testOutputHelper);
+            _backupsService = _fixture.GetService<ISqlService>(_testOutputHelper);
         }
 
         [Fact(Skip = "Build")]
-        public void Should_BackupAllDatabase_When_ConnectedToTheServer()
+        public async Task Should_BackupDatabase_When_ConnectedToTheServer()
         {
-            var result = _backupsService.BackupAll();
+            var record = await Record.ExceptionAsync(async () =>
+            {
+                await _backupsService.BackupAsync("takerman_dating_dev");
+            });
 
-            Assert.NotNull(result);
+            Assert.NotNull(record?.Message);
         }
 
         [Fact(Skip = "Build")]
-        public void Should_BackupDatabase_When_ConnectedToTheServer()
+        public async Task Should_GetAllBackups_When_ConnectedToTheServer()
         {
-            var result = _backupsService.Backup("takerman_dating_dev");
-
-            Assert.NotNull(result);
-        }
-
-        [Fact(Skip = "Build")]
-        public void Should_GetAllBackups_When_ConnectedToTheServer()
-        {
-            var result = _backupsService.GetAll();
+            var result = await _backupsService.GetBackups("master");
 
             Assert.NotNull(result);
         }

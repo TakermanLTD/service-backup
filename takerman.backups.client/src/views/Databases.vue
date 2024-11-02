@@ -1,9 +1,6 @@
 <template>
     <div class="container">
         <div class="row">
-            <button class="btn btn-info" @click="backupAll()">Backup All</button>
-        </div>
-        <div class="row">
             <h2 class="text-center">Databases</h2>
             <p>
                 <strong class="text-center">{{ state }}</strong>
@@ -11,8 +8,10 @@
             <table class="table table-borderless">
                 <tr v-for="(database, key) in databases" :key="key">
                     <td>{{ database.name }}</td>
-                    <td>{{ database.size.toFixed(2) }} MB</td>
-                    <td>{{ database.location }}</td>
+                    <td>{{ database.state }}</td>
+                    <td>{{ database.recoveryModel }}</td>
+                    <td>{{ database.dataSizeMB.toFixed(2) }} MB</td>
+                    <td>{{ database.logSizeMB.toFixed(2) }} MB</td>
                     <td>
                         <button class="btn btn-info" @click="viewBackups(database.name)">backups</button>
                         <button class="btn btn-info" @click="remove(database.name)">remove</button>
@@ -43,16 +42,6 @@ export default {
             this.state = 'loading';
             this.databases = await (await fetch('/Databases/GetAll')).json();
             this.state = '';
-        },
-        async backupAll() {
-            this.state = 'loading';
-            let result = await fetch('/Backups/BackupAll');
-            if (result)
-                this.state = 'backuped all';
-            else
-                this.state = 'cannot backup all';
-
-            this.getAll();
         },
         async remove(database) {
             this.state = 'loading';

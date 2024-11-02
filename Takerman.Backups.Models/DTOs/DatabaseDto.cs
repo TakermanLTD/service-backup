@@ -2,10 +2,14 @@
 {
     public class DatabaseDto
     {
-        public string Name { get; set; }
+        public decimal DataSizeMB { get; set; }
 
-        public double Size { get; set; }
+        public decimal LogSizeMB { get; set; }
 
-        public string Location { get; set; }
+        public string Name { get; set; } = string.Empty;
+
+        public string RecoveryModel { get; set; } = string.Empty;
+
+        public string State { get; set; } = string.Empty;
     }
 }

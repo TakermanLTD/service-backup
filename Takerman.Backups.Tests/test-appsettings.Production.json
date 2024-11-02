@@ -4,6 +4,6 @@
     "DataProvider": "sqlserver"
   },
   "CommonConfig": {
-    "BackupsLocation": "/var/opt/mssql/data"
+    "BackupsLocation": "/var/opt/mssql/data/"
   }
 }

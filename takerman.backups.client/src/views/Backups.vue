@@ -2,7 +2,6 @@
     <div class="container">
         <div class="row">
             <button class="btn btn-info" @click="backup()">Backup</button>
-            <button class="btn btn-info" @click="removeAll()">Delete All</button>
         </div>
         <div class="row">
             <h2 class="text-center">Backups</h2>
@@ -45,7 +44,7 @@ export default {
     methods: {
         async getForDatabase() {
             this.state = 'loading';
-            this.backups = await (await fetch('/Backups/GetForDatabase?database=' + this.database)).json();
+            this. backups = await (await fetch('/Backups/GetForDatabase?database=' + this.database)).json();
 
             if (!this.backups || this.backups.length == 0)
                 this.state = 'no backups';
@@ -53,9 +52,8 @@ export default {
                 this.state = '';
         },
         async backup() {
-            let result = await (await fetch('/Backups/Backup?database=' + this.database + "&incremental=" + false)).json();
-            if (result)
-                this.state = 'backup finished';
+            await fetch('/Backups/Backup?database=' + this.database);
+            this.state = 'backup finished';
             this.getForDatabase();
         },
         async restore(backup) {
@@ -68,12 +66,6 @@ export default {
             let result = await (await fetch('/Backups/Delete?backup=' + backup)).json();
             if (result)
                 this.state = 'removed';
-            this.getForDatabase();
-        },
-        async removeAll() {
-            let result = await (await fetch('/Backups/DeleteAll?database=' + this.database)).json();
-            if (result)
-                this.state = 'removed all';
             this.getForDatabase();
         }
     }

@@ -1,74 +1,45 @@
 using Microsoft.AspNetCore.Mvc;
+using Takerman.Backups.Models.DTOs;
 using Takerman.Backups.Services.Abstraction;
 
 namespace Takerman.Backups.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BackupsController(ILogger<DatabasesController> _logger, IBackupsService _backupsService) : ControllerBase
+    public class BackupsController(ILogger<DatabasesController> _logger, ISqlService _sqlService) : ControllerBase
     {
-        [HttpGet("Get")]
-        public IActionResult Get(string backup)
-        {
-            var result = _backupsService.Get(backup);
-
-            return Ok(result);
-        }
-
-        [HttpGet("GetForDatabase")]
-        public IActionResult GetForDatabase(string database)
-        {
-            var result = _backupsService.GetAll(database);
-
-            return Ok(result);
-        }
-
-        [HttpGet("GetAll")]
-        public IActionResult GetAll()
-        {
-            var result = _backupsService.GetAll();
-
-            return Ok(result);
-        }
-
         [HttpGet("Backup")]
-        public IActionResult Backup(string database)
+        public async Task Backup(string database)
         {
-            var result = _backupsService.Backup(database);
-
-            return Ok(result);
-        }
-
-        [HttpGet("BackupAll")]
-        public IActionResult BackupAll()
-        {
-            var result = _backupsService.BackupAll();
-
-            return Ok(result);
-        }
-
-        [HttpGet("Restore")]
-        public IActionResult Restore(string backup, string database)
-        {
-            var result = _backupsService.Restore(backup, database);
-
-            return Ok(result);
+            await _sqlService.BackupAsync(database);
         }
 
         [HttpGet("Delete")]
-        public IActionResult Delete(string backup)
+        public async Task Delete(string backup)
         {
-            var result = _backupsService.Delete(backup);
-
-            return Ok(result);
+            await _sqlService.DeleteBackupByNameAsync(backup);
         }
 
-        [HttpGet("DeleteAll")]
-        public IActionResult DeleteAll(string database)
+        [HttpGet("Get")]
+        public async Task<BackupDto> Get(string backup)
         {
-            var result = _backupsService.DeleteAll(database);
+            var result = await _sqlService.Select<BackupDto>(backup);
 
-            return Ok(result);
+            return result.FirstOrDefault();
+        }
+
+        [HttpGet("GetForDatabase")]
+        public List<BackupDto> GetForDatabase(string database)
+        {
+            var result = _sqlService.GetBackups(database);
+
+            return result;
+        }
+
+        [HttpGet("Restore")]
+        public async Task Restore(string backup, string database)
+        {
+            await _sqlService.RestoreDatabaseAsync(database, backup);
         }
     }
 }

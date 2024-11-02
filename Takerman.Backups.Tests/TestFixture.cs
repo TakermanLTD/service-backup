@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Takerman.Backups.Models.Configuration;
+using Takerman.Backups.Services;
 using Takerman.Backups.Services.Abstraction;
-using Takerman.Backupss.Services;
 using Xunit.Microsoft.DependencyInjection;
 using Xunit.Microsoft.DependencyInjection.Abstracts;
 
@@ -14,8 +14,7 @@ namespace Takerman.Backups.Tests
             => services
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)))
                 .Configure<CommonConfig>(configuration.GetSection(nameof(CommonConfig)))
-                .AddTransient<IDatabasesService, DatabasesService>()
-                .AddTransient<IBackupsService, BackupsService>();
+                .AddTransient<ISqlService, SqlService>();
 
         protected override ValueTask DisposeAsyncCore() => new();
 

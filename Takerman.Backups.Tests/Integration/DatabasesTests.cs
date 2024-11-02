@@ -6,47 +6,46 @@ namespace Takerman.Backups.Tests.Integration
 {
     public class DatabasesTests : TestBed<TestFixture>
     {
-        private readonly IDatabasesService? _databaseService;
-
+        private readonly ISqlService? _sqlService;
 
         public DatabasesTests(ITestOutputHelper testOutputHelper, TestFixture fixture)
         : base(testOutputHelper, fixture)
         {
-            _databaseService = _fixture.GetService<IDatabasesService>(_testOutputHelper);
+            _sqlService = _fixture.GetService<ISqlService>(_testOutputHelper);
         }
 
         [Fact(Skip = "Build")]
-        public void Should_DeleteDatabase_When_ConnectedToTheServer()
+        public async void Should_CreateDatabase_When_ConnectedToTheServer()
         {
-            var created = _databaseService.Create("takerman_test");
+            var record = await Record.ExceptionAsync(async () =>
+            {
+                await _sqlService.CreateDatabaseAsync("takerman_test");
+            });
 
-            Assert.True(created);
-
-            var result = _databaseService.Delete("takerman_test");
-
-            Assert.True(result);
+            Assert.Null(record?.Message);
         }
 
         [Fact(Skip = "Build")]
-        public void Should_CreateDatabase_When_ConnectedToTheServer()
+        public async Task Should_DeleteDatabase_When_ConnectedToTheServer()
         {
-            var result = _databaseService.Create("takerman_test");
+            var created = await Record.ExceptionAsync(async () =>
+            {
+                await _sqlService.CreateDatabaseAsync("takerman_test");
+            });
+            Assert.Null(created?.Message);
 
-            Assert.True(result);
+            var deleted = await Record.ExceptionAsync(async () =>
+            {
+                await _sqlService.DropDatabaseAsync("takerman_test");
+            });
+
+            Assert.Null(deleted?.Message);
         }
 
         [Fact(Skip = "Build")]
-        public void Should_GetAllDatabases_When_ConnectedToTheServer()
+        public async Task Should_GetAllDatabases_When_ConnectedToTheServer()
         {
-            var result = _databaseService.GetAll();
-
-            Assert.NotNull(result);
-        }
-
-        [Fact(Skip = "Build")]
-        public void Should_GetDatabase_When_ConnectedToTheServer()
-        {
-            var result = _databaseService.Get("master");
+            var result = await _sqlService.GetAllDatabasesAsync();
 
             Assert.NotNull(result);
         }

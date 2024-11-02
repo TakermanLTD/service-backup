@@ -1,42 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
+using Takerman.Backups.Models.DTOs;
 using Takerman.Backups.Services.Abstraction;
 
 namespace Takerman.Backups.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DatabasesController(ILogger<DatabasesController> _logger, IDatabasesService _databaseService) : ControllerBase
+    public class DatabasesController(ILogger<DatabasesController> _logger, ISqlService _sqlService) : ControllerBase
     {
         [HttpGet("Create")]
-        public IActionResult Create(string database)
+        public async Task Create(string database)
         {
-            var result = _databaseService.Create(database);
-
-            return Ok(result);
+            await _sqlService.CreateDatabaseAsync(database);
         }
 
         [HttpGet("Delete")]
-        public IActionResult Delete(string database)
+        public async Task Delete(string database)
         {
-            var result = _databaseService.Delete(database);
-
-            return Ok(result);
-        }
-
-        [HttpGet("Get")]
-        public IActionResult Get(string name)
-        {
-            var result = _databaseService.Get(name);
-
-            return Ok(result);
+            await _sqlService.DropDatabaseAsync(database);
         }
 
         [HttpGet("GetAll")]
-        public IActionResult GetAll()
+        public async Task<List<DatabaseDto>> GetAll()
         {
-            var result = _databaseService.GetAll();
+            var result = await _sqlService.GetAllDatabasesAsync();
 
-            return Ok(result);
+            return result;
         }
     }
 }
