@@ -10,7 +10,7 @@
             </p>
             <table class="table table-borderless">
                 <tr v-for="(backup, key) in this.backups" :key="key">
-                    <td>{{ backup.created }}</td>
+                    <td>{{ moment(backup.created).format("YYYY MMM DD hh:mm") }}</td>
                     <td>{{ backup.name }}</td>
                     <!-- <td>{{ backup.location }}</td> -->
                     <td>{{ (backup.size / 1024).toFixed(2) }} MB</td>
@@ -25,6 +25,7 @@
 </template>
 
 <script lang="js">
+import moment from 'moment';
 import { useRoute } from 'vue-router';
 
 
@@ -33,7 +34,8 @@ export default {
         return {
             backups: [],
             state: '',
-            database: ''
+            database: '',
+            moment: moment
         }
     },
     async mounted() {
@@ -44,7 +46,7 @@ export default {
     methods: {
         async getForDatabase() {
             this.state = 'loading';
-            this. backups = await (await fetch('/Backups/GetForDatabase?database=' + this.database)).json();
+            this.backups = await (await fetch('/Backups/GetForDatabase?database=' + this.database)).json();
 
             if (!this.backups || this.backups.length == 0)
                 this.state = 'no backups';
@@ -57,16 +59,18 @@ export default {
             this.getForDatabase();
         },
         async restore(backup) {
-            let result = await (await fetch('/Backups/Restore?backup=' + backup + "&database=" + this.database)).json();
-            if (result)
+            if (confirm('Are you sure?')) {
+                await fetch('/Backups/Restore?backup=' + backup + "&database=" + this.database);
                 this.state = 'restore finished';
-            this.getForDatabase();
+                this.getForDatabase();
+            }
         },
         async remove(backup) {
-            let result = await (await fetch('/Backups/Delete?backup=' + backup)).json();
-            if (result)
+            if (confirm('Are you sure?')) {
+                await fetch('/Backups/Delete?backup=' + backup);
                 this.state = 'removed';
-            this.getForDatabase();
+                this.getForDatabase();
+            }
         }
     }
 }
