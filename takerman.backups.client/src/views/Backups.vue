@@ -12,7 +12,7 @@
                 <tr v-for="(backup, key) in this.backups" :key="key">
                     <td>{{ backup.created }}</td>
                     <td>{{ backup.name }}</td>
-                    <td>{{ backup.location }}</td>
+                    <!-- <td>{{ backup.location }}</td> -->
                     <td>{{ (backup.size / 1024).toFixed(2) }} MB</td>
                     <td>
                         <button class="btn btn-info" @click="restore(backup.name)">restore</button>
