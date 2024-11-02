@@ -36,8 +36,15 @@ export default {
             backups: [],
             state: '',
             database: '',
-            moment: moment
+            moment: moment,
+            isAuthenticated: false
         }
+    },
+    created() {
+      this.isAuthenticated = localStorage.getItem('authenticated') === 'true';
+      if (!this.isAuthenticated) {
+        this.$router.push('/');
+      }
     },
     async mounted() {
         const { params } = useRoute();

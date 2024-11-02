@@ -29,8 +29,15 @@ export default {
     data() {
         return {
             databases: [],
-            state: ''
+            state: '',
+            isAuthenticated: false
         }
+    },
+    created() {
+      this.isAuthenticated = localStorage.getItem('authenticated') === 'true';
+      if (!this.isAuthenticated) {
+        this.$router.push('/');
+      }
     },
     async mounted() {
         await this.getAll();
