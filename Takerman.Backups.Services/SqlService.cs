@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using Takerman.Backups.Models.Configuration;
@@ -7,7 +8,7 @@ using Takerman.Backups.Services.Abstraction;
 
 namespace Takerman.Backups.Services
 {
-    public class SqlService(IOptions<ConnectionStrings> _connectionString, IOptions<CommonConfig> _commonConfig) : ISqlService
+    public class SqlService(IOptions<ConnectionStrings> _connectionString, IOptions<CommonConfig> _commonConfig, ILogger<SqlService> _logger) : ISqlService
     {
         public async Task BackupAsync(string databaseName)
         {
@@ -155,6 +156,38 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
             foreach (var file in backupFiles.Except(backupsToKeep))
             {
                 file.Delete();
+            }
+        }
+
+        public async Task OptimizeDatabaseAsync(string databaseName)
+        {
+            var query = $@"
+                USE {databaseName};
+
+                -- Rebuild all indexes
+                EXEC sp_MSforeachtable @command1='PRINT ''?'' DBCC DBREINDEX (''?'')';
+
+                -- Update statistics
+                EXEC sp_MSforeachtable @command1='UPDATE STATISTICS ?';
+
+                -- Shrink the database to reclaim unused space (optional)
+                DBCC SHRINKDATABASE ({databaseName});";
+
+            try
+            {
+                await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
+                await connection.OpenAsync();
+
+                await using var command = new SqlCommand(query, connection);
+                await command.ExecuteNonQueryAsync();
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, $"SQL Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error: {ex.Message}");
             }
         }
 

@@ -20,10 +20,12 @@ namespace Takerman.Backups.Services.Abstraction
 
         List<BackupDto> GetBackups(string database);
 
+        void MaintainBackups();
+
+        Task OptimizeDatabaseAsync(string databaseName);
+
         Task RestoreDatabaseAsync(string databaseName, string backupFile);
 
         Task<List<T>> Select<T>(string query) where T : new();
-
-        void MaintainBackups();
     }
 }

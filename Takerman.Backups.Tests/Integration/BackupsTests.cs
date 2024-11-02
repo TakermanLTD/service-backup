@@ -39,7 +39,7 @@ namespace Takerman.Backups.Tests.Integration
         {
             var record = await Record.ExceptionAsync(async () => 
             {
-                var autoBackup = new AutoBackupService(_sqlService, null);
+                var autoBackup = new AutoBackupService(_sqlService, null, null);
                 
                 await autoBackup.StartAsync(CancellationToken.None);
             });

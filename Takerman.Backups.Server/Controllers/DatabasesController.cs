@@ -27,5 +27,11 @@ namespace Takerman.Backups.Server.Controllers
 
             return result;
         }
+
+        [HttpGet("Optimize")]
+        public async Task Optimize(string database)
+        {
+            await _sqlService.OptimizeDatabaseAsync(database);
+        }
     }
 }

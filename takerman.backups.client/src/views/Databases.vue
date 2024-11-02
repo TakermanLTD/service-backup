@@ -15,6 +15,7 @@
                     <td>
                         <button class="btn btn-info" @click="viewBackups(database.name)">backups</button>
                         <button class="btn btn-info" @click="remove(database.name)">remove</button>
+                        <button class="btn btn-info" @click="optimize(database.name)">optimize</button>
                     </td>
                 </tr>
             </table>
@@ -42,6 +43,11 @@ export default {
             this.state = 'loading';
             this.databases = await (await fetch('/Databases/GetAll')).json();
             this.state = '';
+        },
+        async optimize(database) {
+            await fetch('/Databases/Optimize?database=' + database);
+            this.state = 'optimization finished';
+            this.getForDatabase();
         },
         async remove(database) {
             this.state = 'loading';
