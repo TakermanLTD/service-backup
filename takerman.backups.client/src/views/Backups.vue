@@ -40,10 +40,10 @@ export default {
         }
     },
     created() {
-      this.isAuthenticated = localStorage.getItem('authenticated') === 'true';
-      if (!this.isAuthenticated) {
-        this.$router.push('/');
-      }
+        this.isAuthenticated = localStorage.getItem('authenticated') === 'true';
+        if (!this.isAuthenticated) {
+            this.$router.push('/');
+        }
     },
     async mounted() {
         const { params } = useRoute();
@@ -74,7 +74,7 @@ export default {
         },
         async remove(backup) {
             if (confirm('Are you sure?')) {
-                await fetch('/Backups/Delete?backup=' + backup);
+                await fetch('/Backups/Delete?database=' + this.database + '&backup=' + backup);
                 this.state = 'removed';
                 this.getForDatabase();
             }

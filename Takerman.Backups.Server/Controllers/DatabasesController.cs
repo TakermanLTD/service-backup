@@ -25,7 +25,7 @@ namespace Takerman.Backups.Server.Controllers
         {
             var result = await _sqlService.GetAllDatabasesAsync();
 
-            return result;
+            return result.Where(x => x.Name.StartsWith("takerman")).ToList();
         }
 
         [HttpGet("Optimize")]

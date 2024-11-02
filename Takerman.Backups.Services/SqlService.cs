@@ -17,7 +17,9 @@ DECLARE @BackupFileName NVARCHAR(255);
 SET @BackupFileName = @FileName;
 BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
 
-            var fileName = $"{_commonConfig.Value.BackupsLocation}{databaseName}_{DateTime.Now:yy_MM_dd_HH_mm}.bak";
+            var directory = GetDirectoryPath(databaseName);
+
+            var fileName = Path.Combine(directory, $"{databaseName}_{DateTime.Now:yy_MM_dd_HH_mm}.bak");
 
             await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
             await connection.OpenAsync();
@@ -40,17 +42,12 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
             await command.ExecuteNonQueryAsync();
         }
 
-        public async Task DeleteBackupByNameAsync(string backupFileName)
+        public void DeleteBackupByNameAsync(string database, string backupFileName)
         {
-            var backupFilePath = Path.Combine(_commonConfig.Value.BackupsLocation, backupFileName);
+            var backupFilePath = Path.Combine(GetDirectoryPath(database), backupFileName);
 
-            await Task.Run(() =>
-            {
-                if (File.Exists(backupFilePath))
-                {
-                    File.Delete(backupFilePath);
-                }
-            });
+            if (File.Exists(backupFilePath))
+                File.Delete(backupFilePath);
         }
 
         public async Task DeleteFromTableAsync(string table, string condition)
@@ -71,9 +68,9 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
 
             await Task.Run(() =>
             {
-                if (Directory.Exists(_commonConfig.Value.BackupsLocation))
+                if (Directory.Exists(GetDirectoryPath(database)))
                 {
-                    var files = Directory.GetFiles(_commonConfig.Value.BackupsLocation, database + "*.bak", SearchOption.TopDirectoryOnly);
+                    var files = Directory.GetFiles(GetDirectoryPath(database), database + "*.bak", SearchOption.TopDirectoryOnly);
 
                     foreach (var file in files)
                     {
@@ -121,9 +118,9 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
         {
             var backupFiles = new List<BackupDto>();
 
-            if (Directory.Exists(_commonConfig.Value.BackupsLocation))
+            if (Directory.Exists(GetDirectoryPath(database)))
             {
-                var files = Directory.GetFiles(_commonConfig.Value.BackupsLocation, database + "*.bak", SearchOption.TopDirectoryOnly);
+                var files = Directory.GetFiles(GetDirectoryPath(database), database + "*.bak", SearchOption.TopDirectoryOnly);
                 foreach (var file in files)
                 {
                     var fileInfo = new FileInfo(file);
@@ -141,21 +138,25 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
             return [.. backupFiles.OrderByDescending(x => x.Created)];
         }
 
-        public void MaintainBackups()
+        public async Task MaintainBackups()
         {
-            var backupFiles = new DirectoryInfo(_commonConfig.Value.BackupsLocation)
-                .GetFiles("*.bak")
-                .OrderByDescending(f => f.CreationTime)
-                .ToList();
-
-            var dailyBackups = backupFiles.Take(10).ToList();
-            var monthlyBackups = backupFiles.Where(f => f.CreationTime > DateTime.Now.AddMonths(-5)).ToList();
-            var yearlyBackups = backupFiles.Where(f => f.CreationTime > DateTime.Now.AddYears(-3)).ToList();
-            var backupsToKeep = dailyBackups.Concat(monthlyBackups).Concat(yearlyBackups).Distinct().ToList();
-
-            foreach (var file in backupFiles.Except(backupsToKeep))
+            var databases = await GetAllDatabasesAsync();
+            foreach (var database in databases)
             {
-                file.Delete();
+                var backupFiles = new DirectoryInfo(GetDirectoryPath(database.Name))
+                    .GetFiles("*.bak")
+                    .OrderByDescending(f => f.CreationTime)
+                    .ToList();
+
+                var dailyBackups = backupFiles.Take(10).ToList();
+                var monthlyBackups = backupFiles.Where(f => f.CreationTime > DateTime.Now.AddMonths(-5)).ToList();
+                var yearlyBackups = backupFiles.Where(f => f.CreationTime > DateTime.Now.AddYears(-3)).ToList();
+                var backupsToKeep = dailyBackups.Concat(monthlyBackups).Concat(yearlyBackups).Distinct().ToList();
+
+                foreach (var file in backupFiles.Except(backupsToKeep))
+                {
+                    file.Delete();
+                }
             }
         }
 
@@ -193,9 +194,10 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
 
         public async Task RestoreDatabaseAsync(string databaseName, string backupFile)
         {
+            var file = Path.Combine(GetDirectoryPath(databaseName), backupFile);
             var query = $@"
                 RESTORE DATABASE {databaseName}
-                FROM DISK = '{_commonConfig.Value.BackupsLocation}{backupFile}'
+                FROM DISK = '{file}'
                 WITH REPLACE";
 
             await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
@@ -231,6 +233,16 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
             }
 
             return resultList;
+        }
+
+        public string GetDirectoryPath(string databaseName)
+        {
+            var directory = Path.Combine(_commonConfig.Value.BackupsLocation, databaseName);
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            return directory;
         }
     }
 }
