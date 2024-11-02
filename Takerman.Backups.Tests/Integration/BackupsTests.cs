@@ -26,9 +26,9 @@ namespace Takerman.Backups.Tests.Integration
         }
 
         [Fact(Skip = "Build")]
-        public async Task Should_GetAllBackups_When_ConnectedToTheServer()
+        public void Should_GetAllBackups_When_ConnectedToTheServer()
         {
-            var result = await _backupsService.GetBackups("master");
+            var result = _backupsService.GetBackups("master");
 
             Assert.NotNull(result);
         }
