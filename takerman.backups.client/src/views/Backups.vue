@@ -17,7 +17,6 @@
                     <td>
                         <button class="btn btn-info" @click="restore(backup.name)">restore</button>
                         <button class="btn btn-info" @click="remove(backup.name)">remove</button>
-                        <button class="btn btn-info" @click="optimize(backup.name)">optimize</button>
                     </td>
                 </tr>
             </table>
