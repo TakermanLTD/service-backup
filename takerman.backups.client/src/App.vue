@@ -1,7 +1,9 @@
 <template>
-    <AppHeader style="margin-bottom: 100px" />
-    <router-view></router-view>
-    <AppFooter />
+    <div class="container-fluid">
+        <AppHeader style="margin-bottom: 100px" />
+        <router-view></router-view>
+        <AppFooter />
+    </div>
 </template>
 
 <script lang="js">

@@ -10,6 +10,15 @@ namespace Takerman.Backups.Services
 {
     public class SqlService(IOptions<ConnectionStrings> _connectionString, IOptions<CommonConfig> _commonConfig, ILogger<SqlService> _logger) : ISqlService
     {
+        public async Task BackupAllAsync()
+        {
+            var databases = await GetAllDatabasesAsync();
+            databases = databases.Where(x => x.Name.StartsWith("takerman")).ToList();
+
+            foreach (var database in databases)
+                await BackupAsync(database.Name);
+        }
+
         public async Task BackupAsync(string databaseName)
         {
             var query = @$"
@@ -138,6 +147,16 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
             return [.. backupFiles.OrderByDescending(x => x.Created)];
         }
 
+        public string GetDirectoryPath(string databaseName)
+        {
+            var directory = Path.Combine(_commonConfig.Value.BackupsLocation, databaseName);
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            return directory;
+        }
+
         public async Task MaintainBackups()
         {
             var databases = await GetAllDatabasesAsync();
@@ -158,6 +177,15 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
                     file.Delete();
                 }
             }
+        }
+
+        public async Task OptimizeAllAsync()
+        {
+            var databases = await GetAllDatabasesAsync();
+            databases = databases.Where(x => x.Name.StartsWith("takerman")).ToList();
+
+            foreach (var database in databases)
+                await OptimizeDatabaseAsync(database.Name);
         }
 
         public async Task OptimizeDatabaseAsync(string databaseName)
@@ -184,11 +212,11 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
             }
             catch (SqlException ex)
             {
-                _logger.LogError(ex, $"SQL Error: {ex.Message}");
+                _logger.LogError(ex, $"**Backups Service**: {ex.Message}");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error: {ex.Message}");
+                _logger.LogError(ex, $"**Backups Service**: {ex.Message}");
             }
         }
 
@@ -233,16 +261,6 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
             }
 
             return resultList;
-        }
-
-        public string GetDirectoryPath(string databaseName)
-        {
-            var directory = Path.Combine(_commonConfig.Value.BackupsLocation, databaseName);
-
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-
-            return directory;
         }
     }
 }

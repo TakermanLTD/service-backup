@@ -22,11 +22,11 @@ namespace Takerman.Backups.Services
                             await _sqlService.BackupAsync(database.Name);
                         }
 
-                        _logger.LogInformation("Daily backups finished");
+                        _logger.LogInformation("**Backups Service**: Daily backups finished");
 
                         _sqlService.MaintainBackups();
 
-                        _logger.LogInformation("Maintenance finished");
+                        _logger.LogInformation("**Backups Service**: Maintenance finished");
 
                         await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
                     }
@@ -34,7 +34,7 @@ namespace Takerman.Backups.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.GetMessage());
+                _logger.LogError(ex, "**Backups Service**: " + ex.GetMessage());
             }
         }
     }

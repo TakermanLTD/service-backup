@@ -1,24 +1,36 @@
 <template>
     <div class="container">
         <div class="row">
-            <button class="btn btn-info" @click="backup()">Backup</button>
-        </div>
-        <div class="row">
             <h2 class="text-center">Backups</h2>
             <p>
                 <strong class="text-center">{{ this.state }}</strong>
             </p>
+        </div>
+        <div class="row">
+            <button class="btn btn-info" @click="backup()">Backup</button>
+        </div>
+        <div class="row">
             <table class="table table-borderless">
-                <tr v-for="(backup, key) in this.backups" :key="key">
-                    <td>{{ moment(backup.created).format("YYYY MMM DD hh:mm") }}</td>
-                    <td>{{ backup.name }}</td>
-                    <!-- <td>{{ backup.location }}</td> -->
-                    <td>{{ (backup.size / 1024).toFixed(2) }} MB</td>
-                    <td>
-                        <button class="btn btn-info" @click="restore(backup.name)">restore</button>
-                        <button class="btn btn-info" @click="remove(backup.name)">remove</button>
-                    </td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Created</th>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(backup, key) in this.backups" :key="key">
+                        <td>{{ moment(backup.created).format("YYYY MMM DD hh:mm") }}</td>
+                        <td>{{ backup.name }}</td>
+                        <td>{{ (backup.size / 1024).toFixed(2) }} MB</td>
+                        <td>
+                            <button class="btn btn-info" @click="restore(backup.name)">restore</button>
+                            <button class="btn btn-info" @click="remove(backup.name)">remove</button>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>

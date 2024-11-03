@@ -14,6 +14,12 @@ namespace Takerman.Backups.Server.Controllers
             await _sqlService.BackupAsync(database);
         }
 
+        [HttpGet("BackupAll")]
+        public async Task BackupAll()
+        {
+            await _sqlService.BackupAllAsync();
+        }
+
         [HttpGet("Delete")]
         public void Delete(string database, string backup)
         {

@@ -1,12 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Reflection;
-using Takerman.Backups.Models.Configuration;
-using Takerman.Backups.Models.DTOs;
+﻿using Takerman.Backups.Models.DTOs;
 
 namespace Takerman.Backups.Services.Abstraction
 {
     public interface ISqlService
     {
+        Task BackupAllAsync();
+
         Task BackupAsync(string databaseName);
 
         Task CreateDatabaseAsync(string database);
@@ -23,14 +22,16 @@ namespace Takerman.Backups.Services.Abstraction
 
         List<BackupDto> GetBackups(string database);
 
+        string GetDirectoryPath(string databaseName);
+
         Task MaintainBackups();
+
+        Task OptimizeAllAsync();
 
         Task OptimizeDatabaseAsync(string databaseName);
 
         Task RestoreDatabaseAsync(string databaseName, string backupFile);
 
         Task<List<T>> Select<T>(string query) where T : new();
-
-        string GetDirectoryPath(string databaseName);
     }
 }

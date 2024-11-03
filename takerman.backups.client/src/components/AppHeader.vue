@@ -1,6 +1,19 @@
 <template>
     <header>
-        <router-link class="btn btn-info" to="/">Home</router-link>
+        <nav class="navbar navbar-expand-md navbar-light">
+            <div class="container-fluid">
+                <router-link class="navbar-brand" to="/">Backups</router-link>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+                        aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navigation">
+                    <div class="navbar-nav">
+                        <router-link class="nav-link active" aria-current="page" to="/">Home</router-link>
+                    </div>
+                </div>
+            </div>
+        </nav>
     </header>
 </template>
 
