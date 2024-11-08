@@ -160,7 +160,7 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
         public async Task MaintainBackups()
         {
             var databases = await GetAllDatabasesAsync();
-            foreach (var database in databases)
+            foreach (var database in databases.Where(x => x.Name.StartsWith("takerman")))
             {
                 var backupFiles = new DirectoryInfo(GetDirectoryPath(database.Name))
                     .GetFiles("*.bak")
@@ -168,9 +168,19 @@ BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
                     .ToList();
 
                 var dailyBackups = backupFiles.Take(10).ToList();
-                var monthlyBackups = backupFiles.Where(f => f.CreationTime > DateTime.Now.AddMonths(-5)).ToList();
-                var yearlyBackups = backupFiles.Where(f => f.CreationTime > DateTime.Now.AddYears(-3)).ToList();
-                var backupsToKeep = dailyBackups.Concat(monthlyBackups).Concat(yearlyBackups).Distinct().ToList();
+                var monthlyBackups = backupFiles.GroupBy(x => x.CreationTime.Month).LastOrDefault();
+                var yearlyBackups = backupFiles.GroupBy(x => x.CreationTime.Year).LastOrDefault();
+                var backupsToKeep = dailyBackups;
+                
+                if (monthlyBackups != null && monthlyBackups.Any())
+                {
+                    backupFiles = [.. backupFiles, .. monthlyBackups.Take(3)];
+                }
+
+                if (yearlyBackups != null && yearlyBackups.Any())
+                {
+                    backupFiles = [.. backupFiles, .. yearlyBackups.Take(3)];
+                }
 
                 foreach (var file in backupFiles.Except(backupsToKeep))
                 {

@@ -42,6 +42,12 @@ namespace Takerman.Backups.Server.Controllers
             return result;
         }
 
+        [HttpGet("Maintain")]
+        public async Task Maintain()
+        {
+            await _sqlService.MaintainBackups();
+        }
+
         [HttpGet("Restore")]
         public async Task Restore(string backup, string database)
         {

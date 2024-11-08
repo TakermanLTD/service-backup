@@ -24,7 +24,7 @@ namespace Takerman.Backups.Services
 
                         _logger.LogInformation("**Backups Service**: Daily backups finished");
 
-                        _sqlService.MaintainBackups();
+                        await _sqlService.MaintainBackups();
 
                         _logger.LogInformation("**Backups Service**: Maintenance finished");
 

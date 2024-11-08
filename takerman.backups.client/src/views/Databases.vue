@@ -7,8 +7,9 @@
             </p>
         </div>
         <div class="row">
-            <button @click="optimizeAll()" class="btn btn-info">Optimize all</button>
-            <button @click="backupAll()" class="btn btn-info">Backup all</button>
+            <button @click="backupAll()" class="col btn btn-info">backup</button>
+            <button @click="optimizeAll()" class="col btn btn-info">optimize</button>
+            <button @click="maintain()" class="col btn btn-info">maintain</button>
         </div>
         <div class="row">
             <table class="table table-borderless">
@@ -71,17 +72,26 @@ export default {
             this.state = '';
         },
         async optimize(database) {
+            this.state = 'loading';
             await fetch('/Databases/Optimize?database=' + database);
             this.state = 'optimization finished';
             this.getForDatabase();
         },
         async optimizeAll() {
+            this.state = 'loading';
             await fetch('/Databases/OptimizeAll');
             this.state = 'optimize all finished';
         },
         async backupAll() {
+            this.state = 'loading';
             await fetch('/Backups/BackupAll?');
             this.state = 'backup all finished';
+        },
+        async maintain() {
+            this.state = 'loading';
+            await fetch('/Backups/Maintain');
+            this.state = 'maintenance finished';
+            this.getForDatabase();
         },
         async remove(database) {
             this.state = 'loading';

@@ -15,6 +15,19 @@ namespace Takerman.Backups.Tests.Integration
             _sqlService = _fixture.GetService<ISqlService>(_testOutputHelper);
         }
 
+        [Fact(Skip = "It doesn't work entirely on locahost")]
+        public async Task Should_BackupDailyDatabases_When_BackgroundServiceExecutes()
+        {
+            var record = await Record.ExceptionAsync(async () =>
+            {
+                var autoBackup = new AutoBackupService(_sqlService, null, null);
+
+                await autoBackup.StartAsync(CancellationToken.None);
+            });
+
+            Assert.Null(record?.Message);
+        }
+
         [Fact(Skip = "Build")]
         public async Task Should_BackupDatabase_When_ConnectedToTheServer()
         {
@@ -34,15 +47,10 @@ namespace Takerman.Backups.Tests.Integration
             Assert.NotNull(result);
         }
 
-        [Fact(Skip = "It doesn't work entirely on locahost")]
-        public async Task Should_BackupDailyDatabases_When_BackgroundServiceExecutes()
+        [Fact(Skip = "Build")]
+        public async Task Should_MaintainBackups_When_MaintenanceStarts()
         {
-            var record = await Record.ExceptionAsync(async () => 
-            {
-                var autoBackup = new AutoBackupService(_sqlService, null, null);
-                
-                await autoBackup.StartAsync(CancellationToken.None);
-            });
+            var record = await Record.ExceptionAsync(_sqlService.MaintainBackups);
 
             Assert.Null(record?.Message);
         }

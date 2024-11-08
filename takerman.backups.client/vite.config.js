@@ -61,6 +61,14 @@ export default defineConfig({
     },
     server: {
         proxy: {
+            '^/Dashboard': {
+                target: 'https://localhost:5180/',
+                secure: false
+            },
+            '^/Volumes': {
+                target: 'https://localhost:5180/',
+                secure: false
+            },
             '^/Backups': {
                 target: 'https://localhost:5180/',
                 secure: false
@@ -70,7 +78,7 @@ export default defineConfig({
                 secure: false
             }
         },
-        port: 5180,
+        port: 5181,
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),

@@ -7,7 +7,7 @@
             </p>
         </div>
         <div class="row">
-            <button class="btn btn-info" @click="backup()">Backup</button>
+            <button class="col btn btn-info" @click="backup()">backup</button>
         </div>
         <div class="row">
             <table class="table table-borderless">

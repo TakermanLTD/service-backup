@@ -15,6 +15,8 @@ namespace Takerman.Backups.Tests
             services
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)))
                 .Configure<CommonConfig>(configuration.GetSection(nameof(CommonConfig)))
+                .AddTransient<IDashboardService, DashboardService>()
+                .AddTransient<IVolumesService, VolumesService>()
                 .AddTransient<ISqlService, SqlService>();
         }
 
