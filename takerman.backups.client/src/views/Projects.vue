@@ -66,7 +66,7 @@ export default {
         },
         async backupAll() {
             this.state = 'loading';
-            await fetch('/Projects/BackupAll');
+            await fetch('Projects/BackupAll');
             this.state = 'backup all finished';
         },
         sync() {

@@ -73,7 +73,7 @@ export default {
                 this.state = '';
         },
         async backup() {
-            await fetch('/Projects/Backup?project=' + this.project);
+            await fetch('Projects/Backup?project=' + this.project);
             this.state = 'backup finished';
             this.getPackages();
         },
