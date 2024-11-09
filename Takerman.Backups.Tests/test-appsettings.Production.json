@@ -4,7 +4,9 @@
     "DataProvider": "sqlserver"
   },
   "CommonConfig": {
-    "BackupsLocation": "/var/opt/mssql/data/",
-    "HomeLocation": "/home/takerman/"
+    "BackupsLocation": "/volumes",
+    "MicrosoftSqlLocation": "/volumes/mssql/data",
+    "MariaDBLocation": "/volumes/mariadb",
+    "VolumesLocation": "/volumes"
   }
 }

@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Databases from "../views/Databases.vue";
-import Backups from "../views/Backups.vue";
 import Login from "../views/Login.vue";
-import Volumes from "../views/Volumes.vue";
 import Home from "../views/Home.vue";
+import Projects from "../views/Projects.vue";
+import Packages from "../views/Packages.vue";
 
 export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,9 +10,8 @@ export const router = createRouter({
     routes: [
         { path: '/', component: Login },
         { path: '/home', component: Home, name: "home" },
-        { path: '/databases', component: Databases, name: "databases" },
-        { path: '/volumes', component: Volumes, name: "volumes" },
-        { path: '/backups/:database', component: Backups, name: "backups" },
+        { path: '/projects', component: Projects, name: "projects" },
+        { path: '/packages/:project', component: Packages, name: "packages" },
         { path: '/:pathMatch(.*)*', redirect: '/' }
     ]
 });

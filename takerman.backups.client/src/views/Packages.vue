@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row">
-            <h2 class="text-center">Backups</h2>
+            <h2 class="text-center">Packages</h2>
             <p>
                 <strong class="text-center">{{ this.state }}</strong>
             </p>
@@ -13,8 +13,8 @@
             <table class="table table-borderless">
                 <thead>
                     <tr>
-                        <th>Created</th>
                         <th>Name</th>
+                        <th>Created</th>
                         <th>Size</th>
                         <th>
                         </th>
@@ -22,8 +22,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="(backup, key) in this.backups" :key="key">
-                        <td>{{ moment(backup.created).format("YYYY MMM DD hh:mm") }}</td>
                         <td>{{ backup.name }}</td>
+                        <td>{{ moment(backup.created).format("YYYY MMM DD hh:mm") }}</td>
                         <td>{{ (backup.size / 1024).toFixed(2) }} MB</td>
                         <td>
                             <button class="btn btn-info" @click="restore(backup.name)">restore</button>
@@ -44,9 +44,9 @@ import { useRoute } from 'vue-router';
 export default {
     data() {
         return {
-            backups: [],
+            packages: [],
             state: '',
-            database: '',
+            project: '',
             moment: moment,
             isAuthenticated: false
         }
@@ -59,36 +59,29 @@ export default {
     },
     async mounted() {
         const { params } = useRoute();
-        this.database = params.database;
-        this.getForDatabase();
+        this.project = params.project;
+        this.getPackages();
     },
     methods: {
-        async getForDatabase() {
+        async getPackages() {
             this.state = 'loading';
-            this.backups = await (await fetch('/Backups/GetForDatabase?database=' + this.database)).json();
+            this.packages = await (await fetch('/Projects/GetPackages?project=' + this.project)).json();
 
-            if (!this.backups || this.backups.length == 0)
-                this.state = 'no backups';
+            if (!this.packages || this.packages.length == 0)
+                this.state = 'no packages';
             else
                 this.state = '';
         },
         async backup() {
-            await fetch('/Backups/Backup?database=' + this.database);
+            await fetch('/Projects/Backup?project=' + this.project);
             this.state = 'backup finished';
-            this.getForDatabase();
-        },
-        async restore(backup) {
-            if (confirm('Are you sure?')) {
-                await fetch('/Backups/Restore?backup=' + backup + "&database=" + this.database);
-                this.state = 'restore finished';
-                this.getForDatabase();
-            }
+            this.getPackages();
         },
         async remove(backup) {
             if (confirm('Are you sure?')) {
-                await fetch('/Backups/Delete?database=' + this.database + '&backup=' + backup);
+                await fetch('/Projects/Delete?project=' + this.project + '&package=' + backup);
                 this.state = 'removed';
-                this.getForDatabase();
+                this.getPackages();
             }
         }
     }

@@ -1,8 +1,10 @@
 {
   "AllowedHosts": "*",
   "CommonConfig": {
-    "BackupsLocation": "\\\\takerman.net\\root\\home\\takerman\\volumes\\mssql\\data\\",
-    "HomeLocation": "\\\\takerman.net\\root\\home\\takerman\\"
+    "BackupsLocation": "\\\\takerman.net\\root\\home\\takerman\\volumes\\backups",
+    "MicrosoftSqlLocation": "\\\\takerman.net\\root\\home\\takerman\\volumes\\mssql\\data",
+    "MariaDBLocation": "\\\\takerman.net\\root\\home\\takerman\\volumes\\mariadb",
+    "VolumesLocation": "\\\\takerman.net\\root\\home\\takerman\\volumes"
   },
   "ConnectionStrings": {
     "DataProvider": "sqlserver",

@@ -1,8 +1,8 @@
 ﻿namespace Takerman.Backups.Models.DTOs
 {
-    public class VolumeDto
+    public class PackageEntriesDto
     {
-        public DateTime Created { get; set; } = DateTime.Now;
+        public List<BackupEntryDto> BackupEntries { get; set; } = [];
 
         public string Name { get; set; } = string.Empty;
 

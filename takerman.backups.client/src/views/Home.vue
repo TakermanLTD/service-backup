@@ -17,6 +17,9 @@
                 location: {{ dashboard.volumesLocation }}
             </p>
         </div>
+        <div class="row">
+            <h2>Log</h2>
+        </div>
     </div>
 </template>
 <script lang="js">

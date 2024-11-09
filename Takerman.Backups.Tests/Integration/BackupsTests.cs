@@ -7,12 +7,12 @@ namespace Takerman.Backups.Tests.Integration
 {
     public class BackupsTests : TestBed<TestFixture>
     {
-        private readonly ISqlService? _sqlService;
+        private readonly IPackagesService? _packagesService;
 
         public BackupsTests(ITestOutputHelper testOutputHelper, TestFixture fixture)
         : base(testOutputHelper, fixture)
         {
-            _sqlService = _fixture.GetService<ISqlService>(_testOutputHelper);
+            _packagesService = _fixture.GetService<IPackagesService>(_testOutputHelper);
         }
 
         [Fact(Skip = "It doesn't work entirely on locahost")]
@@ -20,7 +20,7 @@ namespace Takerman.Backups.Tests.Integration
         {
             var record = await Record.ExceptionAsync(async () =>
             {
-                var autoBackup = new AutoBackupService(_sqlService, null, null);
+                var autoBackup = new ScheduledBackgroundService(_packagesService, null, null);
 
                 await autoBackup.StartAsync(CancellationToken.None);
             });
@@ -33,24 +33,24 @@ namespace Takerman.Backups.Tests.Integration
         {
             var record = await Record.ExceptionAsync(async () =>
             {
-                await _sqlService.BackupAsync("takerman_dating_dev");
+                await _packagesService.BackupDatabaseAsync("takerman_dating_dev");
             });
 
             Assert.NotNull(record?.Message);
         }
 
-        [Fact(Skip = "Build")]
-        public void Should_GetAllBackups_When_ConnectedToTheServer()
+        [Fact]
+        public async Task Should_CreateBackupPackages_When_Requested()
         {
-            var result = _sqlService.GetBackups("master");
+            var record = await Record.ExceptionAsync(_packagesService.CreateBackupPackages);
 
-            Assert.NotNull(result);
+            Assert.Null(record?.Message);
         }
 
         [Fact(Skip = "Build")]
         public async Task Should_MaintainBackups_When_MaintenanceStarts()
         {
-            var record = await Record.ExceptionAsync(_sqlService.MaintainBackups);
+            var record = await Record.ExceptionAsync(_packagesService.MaintainBackups);
 
             Assert.Null(record?.Message);
         }

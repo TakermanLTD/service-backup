@@ -16,8 +16,8 @@ namespace Takerman.Backups.Tests
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)))
                 .Configure<CommonConfig>(configuration.GetSection(nameof(CommonConfig)))
                 .AddTransient<IDashboardService, DashboardService>()
-                .AddTransient<IVolumesService, VolumesService>()
-                .AddTransient<ISqlService, SqlService>();
+                .AddTransient<ISyncService, SyncService>()
+                .AddTransient<IPackagesService, PackagesService>();
         }
 
         protected override ValueTask DisposeAsyncCore() => new();

@@ -65,15 +65,7 @@ export default defineConfig({
                 target: 'https://localhost:5180/',
                 secure: false
             },
-            '^/Volumes': {
-                target: 'https://localhost:5180/',
-                secure: false
-            },
-            '^/Backups': {
-                target: 'https://localhost:5180/',
-                secure: false
-            },
-            '^/Databases': {
+            '^/Projects': {
                 target: 'https://localhost:5180/',
                 secure: false
             }

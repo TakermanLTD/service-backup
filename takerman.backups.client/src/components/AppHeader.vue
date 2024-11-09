@@ -10,8 +10,7 @@
                 <div class="collapse navbar-collapse" id="navigation">
                     <div class="navbar-nav">
                         <router-link class="nav-link active" aria-current="page" to="/home">Home</router-link>
-                        <router-link class="nav-link active" aria-current="page" to="/databases">Databases</router-link>
-                        <router-link class="nav-link active" aria-current="page" to="/volumes">Volumes</router-link>
+                        <router-link class="nav-link active" aria-current="page" to="/projects">Projects</router-link>
                     </div>
                 </div>
             </div>

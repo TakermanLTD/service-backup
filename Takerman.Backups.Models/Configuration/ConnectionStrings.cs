@@ -2,8 +2,8 @@
 {
     public class ConnectionStrings
     {
-        public string DefaultConnection { get; set; }
+        public string DefaultConnection { get; set; } = string.Empty;
 
-        public string DataProvider { get; set; }
+        public string MySqlConnection { get; set; } = string.Empty;
     }
 }

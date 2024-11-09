@@ -23,10 +23,10 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection(nameof(ConnectionStrings)));
 builder.Services.Configure<CommonConfig>(builder.Configuration.GetSection(nameof(CommonConfig)));
-builder.Services.AddTransient<ISqlService, SqlService>();
+builder.Services.AddTransient<IPackagesService, PackagesService>();
 builder.Services.AddTransient<IDashboardService, DashboardService>();
-builder.Services.AddTransient<IVolumesService, VolumesService>();
-builder.Services.AddHostedService<AutoBackupService>();
+builder.Services.AddTransient<ISyncService, SyncService>();
+builder.Services.AddHostedService<ScheduledBackgroundService>();
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;
