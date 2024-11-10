@@ -2,16 +2,8 @@
 {
     public class DashboardDto
     {
-        public string BackupsLocation { get; set; } = string.Empty;
+        public DateTime ScheduledFor { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1, 3, 0, 0);
 
-        public double BackupsSize { get; set; }
-
-        public string DatabasesLocation { get; set; } = string.Empty;
-
-        public double DatabasesSize { get; set; }
-
-        public string VolumesLocation { get; set; } = string.Empty;
-
-        public double VolumesSize { get; set; }
+        public double TotalSize { get; set; }
     }
 }

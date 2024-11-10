@@ -28,9 +28,9 @@ namespace Takerman.Backups.Server.Controllers
 
 
         [HttpGet("GetAll")]
-        public List<PackageEntriesDto> GetAll()
+        public List<ProjectDto> GetAll()
         {
-            return _projectsService.GetProjectPackageEntries();
+            return _projectsService.GetAll();
         }
 
         [HttpGet("GetPackages")]

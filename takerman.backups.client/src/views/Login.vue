@@ -28,7 +28,7 @@ export default {
     mounted() {
         this.isAuthenticated = localStorage.getItem('authenticated') === 'true';
         if (this.isAuthenticated) {
-            this.$router.push('/home');
+            this.$router.push('/dashboard');
         }
     },
     methods: {
@@ -38,7 +38,7 @@ export default {
 
             if (this.username === hardcodedUsername && this.password === hardcodedPassword) {
                 localStorage.setItem('authenticated', 'true');
-                this.$router.push('/home');
+                this.$router.push('/dashboard');
             } else {
                 alert('Invalid credentials');
             }

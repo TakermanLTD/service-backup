@@ -6,6 +6,7 @@ using System.Reflection;
 using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Models.DTOs;
 using Takerman.Backups.Services.Abstraction;
+using Takerman.Extensions;
 
 namespace Takerman.Backups.Services
 {
@@ -13,20 +14,27 @@ namespace Takerman.Backups.Services
     {
         public async Task BackupDatabaseAsync(string databaseName)
         {
-            var query = @$"
+            try
+            {
+                var query = @$"
                 DECLARE @BackupFileName NVARCHAR(255);
                 SET @BackupFileName = @FileName;
                 BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
 
-            var fileName = Path.Combine(_commonConfig.Value.MicrosoftSqlLocation, $"{databaseName}.bak");
+                var fileName = Path.Combine(_commonConfig.Value.MicrosoftSqlLocation, $"{databaseName}.bak");
 
-            await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
-            await connection.OpenAsync();
+                await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
+                await connection.OpenAsync();
 
-            await using var command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@FileName", fileName);
+                await using var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@FileName", fileName);
 
-            await command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.GetMessage());
+            }
         }
 
         public async Task CreateBackupPackage(string project)
@@ -91,42 +99,6 @@ namespace Takerman.Backups.Services
             Directory.Delete(packageDirectory, true);
         }
 
-
-
-        public async Task<List<T>> Select<T>(string query) where T : new()
-        {
-            await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
-            await connection.OpenAsync();
-            await using var command = new SqlCommand(query, connection);
-            await using var reader = await command.ExecuteReaderAsync();
-
-            var resultList = new List<T>();
-            var properties = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
-            while (reader.Read())
-            {
-                var obj = new T();
-                foreach (var property in properties)
-                {
-                    if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
-                    {
-                        var value = reader[property.Name];
-
-                        property.SetValue(obj, value, null);
-                    }
-                }
-                resultList.Add(obj);
-            }
-
-            return resultList;
-        }
-
-        public async Task<bool> DatabaseExists(string database)
-        {
-            var result = await Select<dynamic>($@"IF EXISTS (SELECT name FROM master.sys.databases WHERE name = N'{database}') PRINT 'true'");
-
-            return result?.Count > 0;
-        }
-
         public async Task CreateBackupPackages()
         {
             var packages = GetProjectPackageEntries();
@@ -137,11 +109,43 @@ namespace Takerman.Backups.Services
             }
         }
 
+        public async Task<bool> DatabaseExists(string database)
+        {
+            var result = await Select<dynamic>($@"SELECT * FROM master.sys.databases WHERE name = N'{database}'");
+
+            return result?.Count > 0;
+        }
+
         public void DeletePackage(string project, string package)
         {
             var path = Path.Combine(_commonConfig.Value.BackupsLocation, project, package);
 
             File.Delete(path);
+        }
+
+        public List<ProjectDto> GetAll()
+        {
+            var result = new List<ProjectDto>();
+
+            if (Directory.Exists(_commonConfig.Value.BackupsLocation))
+            {
+                var directories = Directory.GetDirectories(_commonConfig.Value.BackupsLocation);
+
+                foreach (var dir in directories)
+                {
+                    var files = Directory.GetFiles(dir);
+                    var entry = new ProjectDto()
+                    {
+                        Name = dir,
+                        PackagesCount = files.Length,
+                        TotalSizeMB = files.Sum(x => new FileInfo(x).Length / 1024)
+                    };
+
+                    result.Add(entry);
+                }
+            }
+
+            return result;
         }
 
         public List<PackageEntriesDto> GetProjectPackageEntries()
@@ -256,6 +260,33 @@ namespace Takerman.Backups.Services
             {
                 _logger.LogError(ex, $"**Backups Service**: {ex.Message}");
             }
+        }
+
+        public async Task<List<T>> Select<T>(string query) where T : new()
+        {
+            await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
+            await connection.OpenAsync();
+            await using var command = new SqlCommand(query, connection);
+            await using var reader = await command.ExecuteReaderAsync();
+
+            var resultList = new List<T>();
+            var properties = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            while (reader.Read())
+            {
+                var obj = new T();
+                foreach (var property in properties)
+                {
+                    if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
+                    {
+                        var value = reader[property.Name];
+
+                        property.SetValue(obj, value, null);
+                    }
+                }
+                resultList.Add(obj);
+            }
+
+            return resultList;
         }
     }
 }
