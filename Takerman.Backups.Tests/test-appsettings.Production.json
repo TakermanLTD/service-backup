@@ -1,7 +1,7 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Data Source=data_sqlserver,5433;Initial Catalog=master;Integrated Security=False;Persist Security Info=False;User ID=takerman;Password=Hakerman91!;Trust Server Certificate=True",
-    "DataProvider": "sqlserver"
+    "MicrosoftSqlConnection": "Data Source=data_sqlserver,5433;Initial Catalog=master;Integrated Security=False;Persist Security Info=False;User ID=takerman;Password=Hakerman91!;Trust Server Certificate=True",
+    "MySqlConnection": "Server=data_mariadb;Port=5306;Database=mysql;Uid=root;Pwd=Hakerman91!;"
   },
   "CommonConfig": {
     "BackupsLocation": "/volumes",

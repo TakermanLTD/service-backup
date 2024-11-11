@@ -2,7 +2,7 @@
 {
     public class ConnectionStrings
     {
-        public string DefaultConnection { get; set; } = string.Empty;
+        public string MicrosoftSqlConnection { get; set; } = string.Empty;
 
         public string MySqlConnection { get; set; } = string.Empty;
     }

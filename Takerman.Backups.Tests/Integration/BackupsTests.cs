@@ -1,3 +1,4 @@
+using Takerman.Backups.Models.DTOs;
 using Takerman.Backups.Services;
 using Takerman.Backups.Services.Abstraction;
 using Xunit.Abstractions;
@@ -33,13 +34,13 @@ namespace Takerman.Backups.Tests.Integration
         {
             var record = await Record.ExceptionAsync(async () =>
             {
-                await _packagesService.BackupDatabaseAsync("takerman_dating_dev");
+                await _packagesService.BackupDatabaseAsync("takerman_dating_dev", BackupEntryType.MicrosoftSQL);
             });
 
             Assert.NotNull(record?.Message);
         }
 
-        [Fact(Skip = "Build")]
+        [Fact]
         public async Task Should_CreateBackupPackages_When_Requested()
         {
             var record = await Record.ExceptionAsync(_packagesService.CreateBackupPackages);

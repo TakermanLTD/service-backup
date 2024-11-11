@@ -7,8 +7,8 @@
     "VolumesLocation": "\\\\takerman.net\\root\\home\\takerman\\volumes"
   },
   "ConnectionStrings": {
-    "DataProvider": "sqlserver",
-    "DefaultConnection": "Data Source=takerman.net,5433;Initial Catalog=master;Integrated Security=False;Persist Security Info=False;User ID=takerman;Password=Hakerman91!;Trust Server Certificate=True"
+    "MicrosoftSqlConnection": "Data Source=takerman.net,5433;Initial Catalog=master;Integrated Security=False;Persist Security Info=False;User ID=takerman;Password=Hakerman91!;Trust Server Certificate=True",
+    "MySqlConnection": "Server=takerman.net;Port=5306;Database=mysql;Uid=root;Pwd=Hakerman91!;"
   },
   "Logging": {
     "LogLevel": {

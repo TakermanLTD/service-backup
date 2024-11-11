@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MySql.Data.MySqlClient;
+using System.Data;
 using System.IO.Compression;
 using System.Reflection;
 using Takerman.Backups.Models.Configuration;
@@ -12,24 +14,51 @@ namespace Takerman.Backups.Services
 {
     public class PackagesService(IOptions<ConnectionStrings> _connectionString, IOptions<CommonConfig> _commonConfig, ILogger<PackagesService> _logger) : IPackagesService
     {
-        public async Task BackupDatabaseAsync(string databaseName)
+        public async Task BackupDatabaseAsync(string databaseName, BackupEntryType type)
         {
             try
             {
-                var query = @$"
-                DECLARE @BackupFileName NVARCHAR(255);
-                SET @BackupFileName = @FileName;
-                BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
+                if (await IsDatabaseExisting(databaseName, type))
+                {
+                    switch (type)
+                    {
+                        case BackupEntryType.MicrosoftSQL:
+                            var query = @$"
+                            DECLARE @BackupFileName NVARCHAR(255);
+                            SET @BackupFileName = @FileName;
+                            BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
 
-                var fileName = Path.Combine(_commonConfig.Value.MicrosoftSqlLocation, $"{databaseName}.bak");
+                            var fileName = Path.Combine(_commonConfig.Value.MicrosoftSqlLocation, $"{databaseName}.bak");
 
-                await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
-                await connection.OpenAsync();
+                            using (var connection = new SqlConnection(_connectionString.Value.MicrosoftSqlConnection))
+                            {
+                                await connection.OpenAsync();
+                                await using var command = new SqlCommand(query, connection);
+                                command.Parameters.AddWithValue("@FileName", fileName);
+                                await command.ExecuteNonQueryAsync();
+                            }
+                            break;
 
-                await using var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@FileName", fileName);
+                        case BackupEntryType.MySQL:
+                        case BackupEntryType.MariaDB:
+                            using (var conn = new MySqlConnection(_connectionString.Value.MySqlConnection))
+                            {
+                                using var cmd = new MySqlCommand("mysqldump -u root --port=5306 -p printing > test.sql");
+                                cmd.Connection = conn;
+                                conn.Open();
+                                await cmd.ExecuteNonQueryAsync();
+                                conn.Close();
+                            }
+                            break;
 
-                await command.ExecuteNonQueryAsync();
+                        case BackupEntryType.SQLite:
+                            break;
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("**Backups**: Tried to backup a microsoft database for a package, but the database does not exits");
+                }
             }
             catch (Exception ex)
             {
@@ -40,46 +69,44 @@ namespace Takerman.Backups.Services
         public async Task CreateBackupPackage(string project)
         {
             var packages = GetProjectPackageEntries();
-
             var package = packages.FirstOrDefault(x => x.Name.ToLower() == project.ToLower());
+            var packageName = $"{package.Name}_{DateTime.Now:yyyy_MM_dd_hh_mm}";
+            var packageDirectory = Path.Combine(_commonConfig.Value.BackupsLocation, package.Name, packageName);
 
-            var packageDirectory = Path.Combine(_commonConfig.Value.BackupsLocation, package.Name, $"{package.Name}_{DateTime.Now:yyyy_MM_dd_hh_mm}");
             if (!Directory.Exists(packageDirectory))
                 Directory.CreateDirectory(packageDirectory);
 
             foreach (var entry in package.BackupEntries)
             {
+                var sourceDirectory = Path.Combine(_commonConfig.Value.VolumesLocation, entry.Source);
                 switch (entry.Type)
                 {
                     case BackupEntryType.MicrosoftSQL:
-                        if (await DatabaseExists(entry.Source))
-                        {
-                            await BackupDatabaseAsync(entry.Source);
-                            File.Move(Path.Combine(_commonConfig.Value.MicrosoftSqlLocation, $"{entry.Source}.bak"), packageDirectory);
-                        }
-                        else
-                        {
-                            _logger.LogWarning("**Backups**: Tried to backup a microsoft database for a package, but the database does not exits");
-                        }
+                        await BackupDatabaseAsync(entry.Source, entry.Type);
+                        File.Move(Path.Combine(_commonConfig.Value.MicrosoftSqlLocation, $"{entry.Source}.bak"), packageDirectory);
+
                         break;
 
                     case BackupEntryType.MySQL:
                     case BackupEntryType.MariaDB:
-                        if (await DatabaseExists(entry.Source))
-                        {
-                            await BackupDatabaseAsync(entry.Source);
-                            File.Move(Path.Combine(_commonConfig.Value.MariaDBLocation, $"{entry.Source}.sql"), packageDirectory);
-                        }
-                        else
-                        {
-                            _logger.LogWarning("**Backups**: Tried to backup a mariadb database for a package, but the database does not exits");
-                        }
+                        await BackupDatabaseAsync(entry.Source, entry.Type);
+                        File.Move(Path.Combine(_commonConfig.Value.MariaDBLocation, $"{entry.Source}.sql"), packageDirectory);
                         break;
 
                     case BackupEntryType.SQLite:
                         break;
 
                     case BackupEntryType.Folder:
+                        if (Directory.Exists(sourceDirectory))
+                        {
+                            CopyFolder(sourceDirectory, Path.Combine(packageDirectory, entry.Prefix + packageName));
+                        }
+                        else
+                        {
+                            _logger.LogWarning("**Backups**: Tried to copy files for a package, but the files does not exits");
+                        }
+                        break;
+
                     case BackupEntryType.File:
                         var filePath = Path.Combine(_commonConfig.Value.VolumesLocation, entry.Source);
                         if (File.Exists(filePath))
@@ -104,16 +131,34 @@ namespace Takerman.Backups.Services
             var packages = GetProjectPackageEntries();
 
             foreach (var package in packages)
-            {
-                await CreateBackupPackage(package.Name);
-            }
+                _ = CreateBackupPackage(package.Name);
         }
 
-        public async Task<bool> DatabaseExists(string database)
+        private void CopyFolder(string folder, string destFolder)
         {
-            var result = await Select<dynamic>($@"SELECT * FROM master.sys.databases WHERE name = N'{database}'");
+            Directory.CreateDirectory(destFolder);
 
-            return result?.Count > 0;
+            foreach (string file in Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories))
+            {
+                string fileName = Path.GetFileName(file);
+                string filePath = Path.GetDirectoryName(file.Substring(folder.Length + (folder.EndsWith("\\") ? 0 : 1)));
+                string destFilePath;
+
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    string destFolderPath = Path.Combine(destFolder, filePath);
+
+                    Directory.CreateDirectory(destFolderPath);
+
+                    destFilePath = Path.Combine(destFolderPath, fileName);
+                }
+                else
+                {
+                    destFilePath = Path.Combine(destFolder, fileName);
+                }
+
+                File.Copy(file, destFilePath);
+            }
         }
 
         public void DeletePackage(string project, string package)
@@ -136,9 +181,9 @@ namespace Takerman.Backups.Services
                     var files = Directory.GetFiles(dir);
                     var entry = new ProjectDto()
                     {
-                        Name = dir,
+                        Name = new DirectoryInfo(dir).Name,
                         PackagesCount = files.Length,
-                        TotalSizeMB = files.Sum(x => new FileInfo(x).Length / 1024)
+                        TotalSizeMB = files.Sum(x => new FileInfo(x).Length) / 1024
                     };
 
                     result.Add(entry);
@@ -156,8 +201,8 @@ namespace Takerman.Backups.Services
                     Name = "Printing",
                     BackupEntries =
                     [
-                        new(){ Type = BackupEntryType.MariaDB, Source = "takerprint" },
-                        new(){ Type = BackupEntryType.Folder, Source = "takerprint/wp-content" }
+                        new(){ Type = BackupEntryType.Folder, Source = Path.Combine("mariadb", "printing"), Prefix = "database_" },
+                        new(){ Type = BackupEntryType.Folder, Source = "printing", Prefix = "website_" }
                     ]
                 },
                 new(){
@@ -196,6 +241,31 @@ namespace Takerman.Backups.Services
             var result = files.Select(x => new FileInfo(x)).ToList();
 
             return result;
+        }
+
+        public async Task<bool> IsDatabaseExisting(string database, BackupEntryType type)
+        {
+            var query = string.Empty;
+            switch (type)
+            {
+                case BackupEntryType.MicrosoftSQL:
+                    query = $@"SELECT * FROM master.sys.databases WHERE name = N'{database}'";
+                    break;
+
+                case BackupEntryType.MySQL:
+                case BackupEntryType.MariaDB:
+                    break;
+
+                case BackupEntryType.SQLite:
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(query))
+                return true;
+
+            var result = await Select<dynamic>(query);
+
+            return result?.Count > 0;
         }
 
         public async Task MaintainBackups()
@@ -246,7 +316,7 @@ namespace Takerman.Backups.Services
 
             try
             {
-                await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
+                await using var connection = new SqlConnection(_connectionString.Value.MicrosoftSqlConnection);
                 await connection.OpenAsync();
 
                 await using var command = new SqlCommand(query, connection);
@@ -264,7 +334,7 @@ namespace Takerman.Backups.Services
 
         public async Task<List<T>> Select<T>(string query) where T : new()
         {
-            await using var connection = new SqlConnection(_connectionString.Value.DefaultConnection);
+            await using var connection = new SqlConnection(_connectionString.Value.MicrosoftSqlConnection);
             await connection.OpenAsync();
             await using var command = new SqlCommand(query, connection);
             await using var reader = await command.ExecuteReaderAsync();
