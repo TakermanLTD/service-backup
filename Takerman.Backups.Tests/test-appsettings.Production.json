@@ -4,7 +4,7 @@
     "MySqlConnection": "Server=data_mariadb;Port=5306;Database=mysql;Uid=root;Pwd=Hakerman91!;"
   },
   "CommonConfig": {
-    "BackupsLocation": "/volumes",
+    "BackupsLocation": "/volumes/backups",
     "MicrosoftSqlLocation": "/volumes/mssql/data",
     "MariaDBLocation": "/volumes/mariadb",
     "VolumesLocation": "/volumes"
