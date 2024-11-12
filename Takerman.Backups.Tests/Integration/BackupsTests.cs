@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Models.DTOs;
 using Takerman.Backups.Services;
 using Takerman.Backups.Services.Abstraction;
@@ -9,14 +11,16 @@ namespace Takerman.Backups.Tests.Integration
     public class BackupsTests : TestBed<TestFixture>
     {
         private readonly IPackagesService? _packagesService;
+        private readonly CommonConfig _commonConfig;
 
         public BackupsTests(ITestOutputHelper testOutputHelper, TestFixture fixture)
         : base(testOutputHelper, fixture)
         {
             _packagesService = _fixture.GetService<IPackagesService>(_testOutputHelper);
+            _commonConfig = _fixture.Configuration.GetSection("CommonConfig").Get<CommonConfig>();
         }
 
-        [Fact(Skip = "It doesn't work entirely on locahost")]
+        [Fact(Skip = "Build")]
         public async Task Should_BackupDailyDatabases_When_BackgroundServiceExecutes()
         {
             var record = await Record.ExceptionAsync(async () =>
@@ -34,7 +38,7 @@ namespace Takerman.Backups.Tests.Integration
         {
             var record = await Record.ExceptionAsync(async () =>
             {
-                await _packagesService.BackupDatabaseAsync("takerman_dating_dev", BackupEntryType.MicrosoftSQL);
+                await _packagesService.BackupDatabaseAsync("takerman_dating_dev", Path.Combine(_commonConfig.BackupsLocation, "tests"), BackupEntryType.MicrosoftSQL);
             });
 
             Assert.NotNull(record?.Message);

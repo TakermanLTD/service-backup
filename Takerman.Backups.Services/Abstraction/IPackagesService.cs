@@ -4,7 +4,7 @@ namespace Takerman.Backups.Services.Abstraction
 {
     public interface IPackagesService
     {
-        Task BackupDatabaseAsync(string databaseName, BackupEntryType type);
+        Task BackupDatabaseAsync(string databaseName, string destination, BackupEntryType type);
 
         Task CreateBackupPackage(string project);
 

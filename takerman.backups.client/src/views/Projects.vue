@@ -25,7 +25,7 @@
                     <tr v-for="(project, key) in projects" :key="key">
                         <td>{{ project.name }}</td>
                         <td>{{ project.packagesCount }}</td>
-                        <td>{{ project.totalSizeMB }} MB</td>
+                        <td>{{ project.totalSizeMB.toFixed(2) }} MB</td>
                         <td>
                             <button class="btn btn-info" @click="viewPackages(project.name)">packages</button>
                         </td>

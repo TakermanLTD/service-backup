@@ -9,8 +9,8 @@
                 </hgroup>
                 <br />
                 <p class="text-center">
-                    <strong>Total Size: </strong>: {{ dashboard.totalSize }} <br />
-                    <strong>Scheduled for: </strong> {{ moment(dashboard.scheduledFor).format("YYYY MMM DD hh:mm") }} <br />
+                    <strong>Total Size: </strong>: {{ dashboard.totalSize.toFixed(2) }} MB<br />
+                    <strong>Scheduled for: </strong> {{ moment(dashboard.scheduledFor).format("DD MMM YYYY - hh:mm") }} <br />
                 </p>
             </div>
         </div>

@@ -14,7 +14,7 @@ namespace Takerman.Backups.Services
 {
     public class PackagesService(IOptions<ConnectionStrings> _connectionString, IOptions<CommonConfig> _commonConfig, ILogger<PackagesService> _logger) : IPackagesService
     {
-        public async Task BackupDatabaseAsync(string databaseName, BackupEntryType type)
+        public async Task BackupDatabaseAsync(string databaseName, string destination, BackupEntryType type)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace Takerman.Backups.Services
                             SET @BackupFileName = @FileName;
                             BACKUP DATABASE {databaseName} TO DISK = @BackupFileName;";
 
-                            var fileName = Path.Combine(_commonConfig.Value.MicrosoftSqlLocation, $"{databaseName}.bak");
+                            var fileName = Path.Combine(destination, $"{databaseName}.bak");
 
                             using (var connection = new SqlConnection(_connectionString.Value.MicrosoftSqlConnection))
                             {
@@ -43,7 +43,7 @@ namespace Takerman.Backups.Services
                         case BackupEntryType.MariaDB:
                             using (var conn = new MySqlConnection(_connectionString.Value.MySqlConnection))
                             {
-                                using var cmd = new MySqlCommand("mysqldump -u root --port=5306 -p printing > test.sql");
+                                using var cmd = new MySqlCommand($"mysqldump -u root --port=5306 -p printing > {Path.Combine(destination, "test.sql")}");
                                 cmd.Connection = conn;
                                 conn.Open();
                                 await cmd.ExecuteNonQueryAsync();
@@ -82,15 +82,12 @@ namespace Takerman.Backups.Services
                 switch (entry.Type)
                 {
                     case BackupEntryType.MicrosoftSQL:
-                        await BackupDatabaseAsync(entry.Source, entry.Type);
-                        File.Move(Path.Combine(_commonConfig.Value.MicrosoftSqlLocation, $"{entry.Source}.bak"), packageDirectory);
-
+                        await BackupDatabaseAsync(entry.Source, packageDirectory, entry.Type);
                         break;
 
                     case BackupEntryType.MySQL:
                     case BackupEntryType.MariaDB:
-                        await BackupDatabaseAsync(entry.Source, entry.Type);
-                        File.Move(Path.Combine(_commonConfig.Value.MariaDBLocation, $"{entry.Source}.sql"), packageDirectory);
+                        await BackupDatabaseAsync(entry.Source, packageDirectory, entry.Type);
                         break;
 
                     case BackupEntryType.SQLite:
@@ -99,7 +96,7 @@ namespace Takerman.Backups.Services
                     case BackupEntryType.Folder:
                         if (Directory.Exists(sourceDirectory))
                         {
-                           new DirectoryInfo(sourceDirectory).CopyFolder(Path.Combine(packageDirectory, entry.Prefix + packageName));
+                            new DirectoryInfo(sourceDirectory).CopyFolder(Path.Combine(packageDirectory, entry.Prefix + packageName));
                         }
                         else
                         {
