@@ -8,7 +8,7 @@ namespace Takerman.Backups.Services
 {
     public class DashboardService(IOptions<CommonConfig> _commonConfig) : IDashboardService
     {
-        public DashboardDto GetDashboard()
+        public async Task<DashboardDto> GetDashboard()
         {
             var result = new DashboardDto
             {

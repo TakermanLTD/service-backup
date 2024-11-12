@@ -9,9 +9,9 @@ namespace Takerman.Backups.Server.Controllers
     public class DashboardController(ILogger<DashboardController> _logger, IDashboardService _dashboardService) : ControllerBase
     {
         [HttpGet("Get")]
-        public DashboardDto Get()
+        public async Task<DashboardDto> Get()
         {
-            return _dashboardService.GetDashboard();
+            return await _dashboardService.GetDashboard();
         }
     }
 }

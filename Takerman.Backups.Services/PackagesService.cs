@@ -78,7 +78,6 @@ namespace Takerman.Backups.Services
 
             foreach (var entry in package.BackupEntries)
             {
-                var sourceDirectory = Path.Combine(_commonConfig.Value.VolumesLocation, entry.Source);
                 switch (entry.Type)
                 {
                     case BackupEntryType.MicrosoftSQL:
@@ -94,6 +93,7 @@ namespace Takerman.Backups.Services
                         break;
 
                     case BackupEntryType.Folder:
+                        var sourceDirectory = Path.Combine(_commonConfig.Value.VolumesLocation, entry.Source);
                         if (Directory.Exists(sourceDirectory))
                         {
                             new DirectoryInfo(sourceDirectory).CopyFolder(Path.Combine(packageDirectory, entry.Prefix + packageName));

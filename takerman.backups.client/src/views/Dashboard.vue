@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="row">
+        <div v-if="this.dashboard" class="row">
             <div class="col">
                 <hgroup class="text-center">
                     <h2>
@@ -9,8 +9,10 @@
                 </hgroup>
                 <br />
                 <p class="text-center">
-                    <strong>Total Size: </strong>: {{ dashboard.totalSize.toFixed(2) }} MB<br />
-                    <strong>Scheduled for: </strong> {{ moment(dashboard.scheduledFor).format("DD MMM YYYY - hh:mm") }} <br />
+                    <strong>Total Size: </strong>: {{ this.dashboard?.totalSize?.toFixed(2) }} MB
+                </p>
+                <p class="text-center">
+                    <strong>Scheduled for: </strong> {{ moment(this.dashboard?.scheduledFor).format("DD MMM YYYY - hh:mm") }} <br />
                 </p>
             </div>
         </div>
@@ -22,12 +24,12 @@ import moment from 'moment';
 export default {
     data() {
         return {
-            dashboard: {},
+            dashboard: null,
             moment: moment
         }
     },
-    async mounted() {
-        this.dashboard = await (await fetch('/Dashboard/Get')).json();
+    async created() {
+        this.dashboard = await (await fetch('Dashboard/Get')).json();
     }
 }
 </script>
