@@ -5,14 +5,14 @@ ENV ASPNETCORE_ENVIRONMENT=Production
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
-RUN apt update && apt install -y curl gnupg libpng-dev libjpeg-dev curl libxi6 build-essential libgl1-mesa-glx
+RUN apt update && apt install -y curl gnupg libpng-dev libjpeg-dev curl libxi6 build-essential libgl1-mesa-glx openssh-server
 RUN curl -fsSL https://deb.nodesource.com/nsolid_setup_deb.sh | sh -s 20
 RUN apt-get install -y nodejs
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ENV ASPNETCORE_ENVIRONMENT=Production
 WORKDIR /src
-RUN apt update && apt install -y curl libpng-dev libjpeg-dev curl libxi6 build-essential libgl1-mesa-glx
+RUN apt update && apt install -y curl libpng-dev libjpeg-dev curl libxi6 build-essential libgl1-mesa-glx openssh-server
 RUN curl -fsSL https://deb.nodesource.com/nsolid_setup_deb.sh | sh -s 20
 RUN apt-get install -y nodejs
 ARG BUILD_CONFIGURATION=Release
