@@ -5,7 +5,7 @@ using Takerman.Extensions;
 
 namespace Takerman.Backups.Services
 {
-    public class ScheduledBackgroundService(IPackagesService _sqlService, ILogger<ScheduledBackgroundService> _logger,
+    public class ScheduledBackgroundService(IPackagesService _packagesService, ISyncService _syncService, ILogger<ScheduledBackgroundService> _logger,
         IHostEnvironment _hostEnvironment) : BackgroundService
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -16,10 +16,9 @@ namespace Takerman.Backups.Services
                 {
                     while (!stoppingToken.IsCancellationRequested)
                     {
-                        // zips the folder with the mssql backups and moves the zip to the folder with date in the backups folder in the volumes
-                        // zips the folder with the mysql backups and moves the zip to the folder with the date in the backups folder in the volumes
-                        // copies the files that i need from the volumes to a volumes folder in the date folder and zips the folder. then removes the folder
-                        // after that syncs the backups folder to google drive
+                        await _packagesService.CreateBackupPackages();
+
+                        await _syncService.Sync();
 
                         await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
                     }

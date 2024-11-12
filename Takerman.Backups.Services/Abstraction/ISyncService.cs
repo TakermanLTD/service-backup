@@ -1,6 +1,8 @@
-﻿namespace Takerman.Backups.Services.Abstraction
+﻿
+namespace Takerman.Backups.Services.Abstraction
 {
     public interface ISyncService
     {
+        Task Sync();
     }
 }

@@ -11,12 +11,14 @@ namespace Takerman.Backups.Tests.Integration
     public class BackupsTests : TestBed<TestFixture>
     {
         private readonly IPackagesService? _packagesService;
+        private readonly ISyncService? _syncService;
         private readonly CommonConfig _commonConfig;
 
         public BackupsTests(ITestOutputHelper testOutputHelper, TestFixture fixture)
         : base(testOutputHelper, fixture)
         {
             _packagesService = _fixture.GetService<IPackagesService>(_testOutputHelper);
+            _syncService = _fixture.GetService<ISyncService>(_testOutputHelper);
             _commonConfig = _fixture.Configuration.GetSection("CommonConfig").Get<CommonConfig>();
         }
 
@@ -25,7 +27,7 @@ namespace Takerman.Backups.Tests.Integration
         {
             var record = await Record.ExceptionAsync(async () =>
             {
-                var autoBackup = new ScheduledBackgroundService(_packagesService, null, null);
+                var autoBackup = new ScheduledBackgroundService(_packagesService, _syncService, null, null);
 
                 await autoBackup.StartAsync(CancellationToken.None);
             });
