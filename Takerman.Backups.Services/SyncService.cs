@@ -10,7 +10,7 @@ namespace Takerman.Backups.Services
         {
             try
             {
-                var result = "sshpass -p 'Hakerman91!' ssh -t -t -p 1991 root@takerman.net && rclone sync /home/takerman/volumes/mssql/data/ google-drive:projects/backups && dupdate".ExecuteCommand();
+                var result = "sshpass -p 'Hakerman91!' ssh -t -t -p 1991 root@85.217.171.20 && rclone sync /home/takerman/volumes/mssql/data/ google-drive:projects/backups && dupdate".ExecuteCommand();
                 _logger.LogInformation("Shell execution: {ShellExecution}", result);
 
                 return result;
