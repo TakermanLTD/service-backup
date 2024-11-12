@@ -26,7 +26,6 @@
                         <td>{{ moment(backup.created).format("YYYY MMM DD hh:mm") }}</td>
                         <td>{{ backup.size.toFixed(2) }} MB</td>
                         <td>
-                            <button class="btn btn-info" @click="restore(backup.name)">restore</button>
                             <button class="btn btn-info" @click="remove(backup.name)">remove</button>
                         </td>
                     </tr>
