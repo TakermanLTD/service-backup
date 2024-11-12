@@ -1,26 +1,40 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+using Google.Apis.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Services.Abstraction;
-using Takerman.Extensions;
 
 namespace Takerman.Backups.Services
 {
-    public class SyncService(ILogger<SyncService> _logger) : ISyncService
+    public class SyncService(ILogger<SyncService> _logger, IOptions<GoogleDriveConfig> _gdConfig) : ISyncService
     {
-        public string Sync()
+        private DriveService _driveService;
+
+        public async Task<string> UploadFileAsync(string path)
         {
-            try
-            {
-                var result = "sshpass -p 'Hakerman91!' ssh -t -t -p 1991 root@85.217.171.20 && rclone sync /home/takerman/volumes/mssql/data/ google-drive:projects/backups && dupdate".ExecuteCommand();
-                _logger.LogInformation("Shell execution: {ShellExecution}", result);
+            var clientId = _gdConfig.Value.ClientId;
+            var clientSecret = _gdConfig.Value.ClientSecret;
+            var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                new ClientSecrets { ClientId = clientId, ClientSecret = clientSecret },
+                [DriveService.Scope.DriveFile],
+                "user",
+                CancellationToken.None);
+            _driveService = new DriveService(new BaseClientService.Initializer { HttpClientInitializer = credential, ApplicationName = "YourAppName" });
 
-                return result;
-            }
-            catch (Exception ex)
+            var fileMetadata = new Google.Apis.Drive.v3.Data.File { Name = Path.GetFileName(path) };
+            FilesResource.CreateMediaUpload request;
+            using (var stream = new FileStream(path, FileMode.Open))
             {
-                _logger.LogError(ex, ex.GetMessage());
-
-                return ex.GetMessage();
+                request = _driveService.Files.Create(fileMetadata, stream, "application/octet-stream");
+                request.Fields = "id";
+                await request.UploadAsync();
             }
+
+            var file = request.ResponseBody;
+            return file.Id;
         }
     }
 }

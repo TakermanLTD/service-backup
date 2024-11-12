@@ -3,6 +3,6 @@ namespace Takerman.Backups.Services.Abstraction
 {
     public interface ISyncService
     {
-        string Sync();
+        Task<string> UploadFileAsync(string path);
     }
 }

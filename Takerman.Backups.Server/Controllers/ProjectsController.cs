@@ -37,11 +37,5 @@ namespace Takerman.Backups.Server.Controllers
         {
             return await _projectsService.GetProjectPackages(project);
         }
-
-        [HttpGet("Sync")]
-        public async Task<string> Sync()
-        {
-            return _syncService.Sync();
-        }
     }
 }

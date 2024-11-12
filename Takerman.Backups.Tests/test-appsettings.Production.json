@@ -8,5 +8,10 @@
     "MicrosoftSqlLocation": "/volumes/mssql/data",
     "MariaDBLocation": "/volumes/mariadb",
     "VolumesLocation": "/volumes"
+  },
+  "GoogleDriveConfig": {
+    "ClientId": "827940900757-2j6fqlahs94pjt7r697kkgqdu4lo3c24.apps.googleusercontent.com",
+    "ClientSecret": "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",
+    "RedirectUri": "https://backups.takerman.net"
   }
 }

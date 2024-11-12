@@ -23,6 +23,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection(nameof(ConnectionStrings)));
 builder.Services.Configure<CommonConfig>(builder.Configuration.GetSection(nameof(CommonConfig)));
+builder.Services.Configure<GoogleDriveConfig>(builder.Configuration.GetSection(nameof(GoogleDriveConfig)));
 builder.Services.AddTransient<IPackagesService, PackagesService>();
 builder.Services.AddTransient<IDashboardService, DashboardService>();
 builder.Services.AddTransient<ISyncService, SyncService>();

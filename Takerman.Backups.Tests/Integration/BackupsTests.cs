@@ -19,7 +19,7 @@ namespace Takerman.Backups.Tests.Integration
         {
             _packagesService = _fixture.GetService<IPackagesService>(_testOutputHelper);
             _syncService = _fixture.GetService<ISyncService>(_testOutputHelper);
-            _commonConfig = _fixture.Configuration.GetSection("CommonConfig").Get<CommonConfig>();
+            _commonConfig = _fixture.Configuration.GetSection(nameof(CommonConfig)).Get<CommonConfig>();
         }
 
         [Fact(Skip = "Build")]
