@@ -7,7 +7,7 @@
             </p>
         </div>
         <div class="row">
-            <button @click="backupAll()" class="col btn btn-info">backup</button>
+            <button @click="backupAll()" class="col btn btn-info">backup all</button>
             <button @click="sync()" class="col btn btn-info">sync</button>
         </div>
         <div class="row">
@@ -27,6 +27,7 @@
                         <td>{{ project.packagesCount }}</td>
                         <td>{{ project.totalSizeMB.toFixed(2) }} MB</td>
                         <td>
+                            <button class="btn btn-info" @click="backup(project.name)">backup</button>
                             <button class="btn btn-info" @click="viewPackages(project.name)">packages</button>
                         </td>
                     </tr>
@@ -67,6 +68,11 @@ export default {
         async backupAll() {
             this.state = 'loading';
             await fetch('Projects/BackupAll');
+            this.state = 'backup all finished';
+        },
+        async backup(name) {
+            this.state = 'loading';
+            await fetch('Projects/Backup?name=' + name);
             this.state = 'backup all finished';
         },
         sync() {
