@@ -18,7 +18,7 @@ namespace Takerman.Backups.Services
                     {
                         await _packagesService.CreateBackupPackages();
 
-                        await _syncService.Sync();
+                        _syncService.Sync();
 
                         await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
                     }

@@ -77,7 +77,10 @@ export default {
             this.state = 'backup finished';
             await this.getAll();
         },
-        sync() {
+        async sync() {
+            this.state = 'loading';
+            await fetch('Projects/Sync');
+            this.state = 'sync finished';
         }
     }
 }

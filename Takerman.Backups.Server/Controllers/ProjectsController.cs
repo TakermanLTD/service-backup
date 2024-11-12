@@ -6,7 +6,7 @@ namespace Takerman.Backups.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProjectsController(ILogger<ProjectsController> _logger, IPackagesService _projectsService) : ControllerBase
+    public class ProjectsController(ILogger<ProjectsController> _logger, IPackagesService _projectsService, ISyncService _syncService) : ControllerBase
     {
         [HttpGet("Backup")]
         public async Task Backup(string project)
@@ -26,7 +26,6 @@ namespace Takerman.Backups.Server.Controllers
             _projectsService.DeletePackage(project, package);
         }
 
-
         [HttpGet("GetAll")]
         public List<ProjectDto> GetAll()
         {
@@ -37,6 +36,12 @@ namespace Takerman.Backups.Server.Controllers
         public async Task<List<PackageDto>> GetPackages(string project)
         {
             return await _projectsService.GetProjectPackages(project);
+        }
+
+        [HttpGet("Sync")]
+        public async Task<string> Sync()
+        {
+            return _syncService.Sync();
         }
     }
 }
