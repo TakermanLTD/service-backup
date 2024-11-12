@@ -204,11 +204,18 @@ namespace Takerman.Backups.Services
             ];
         }
 
-        public List<FileInfo> GetProjectPackages(string project)
+        public async Task<List<PackageDto>> GetProjectPackages(string project)
         {
             var files = Directory.GetFiles(Path.Combine(_commonConfig.Value.BackupsLocation, project));
 
-            var result = files.Select(x => new FileInfo(x)).ToList();
+            var fileInfos = files.Select(x => new FileInfo(x)).ToList();
+
+            var result = fileInfos.Select(x => new PackageDto()
+            {
+                Created = x.CreationTime,
+                Name = x.Name,
+                Size = (x.Length / 1024) / 1024D
+            }).ToList();
 
             return result;
         }

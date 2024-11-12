@@ -21,10 +21,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(backup, key) in this.backups" :key="key">
+                    <tr v-for="(backup, key) in this.packages" :key="key">
                         <td>{{ backup.name }}</td>
                         <td>{{ moment(backup.created).format("YYYY MMM DD hh:mm") }}</td>
-                        <td>{{ (backup.size / 1024).toFixed(2) }} MB</td>
+                        <td>{{ backup.size.toFixed(2) }} MB</td>
                         <td>
                             <button class="btn btn-info" @click="restore(backup.name)">restore</button>
                             <button class="btn btn-info" @click="remove(backup.name)">remove</button>

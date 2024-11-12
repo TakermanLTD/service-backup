@@ -16,7 +16,7 @@ namespace Takerman.Backups.Services.Abstraction
         
         List<PackageEntriesDto> GetProjectPackageEntries();
 
-        List<FileInfo> GetProjectPackages(string project);
+        Task<List<PackageDto>> GetProjectPackages(string project);
 
         Task MaintainBackups();
 

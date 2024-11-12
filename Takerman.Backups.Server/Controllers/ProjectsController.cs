@@ -34,9 +34,9 @@ namespace Takerman.Backups.Server.Controllers
         }
 
         [HttpGet("GetPackages")]
-        public List<FileInfo> GetPackages(string project)
+        public async Task<List<PackageDto>> GetPackages(string project)
         {
-            return _projectsService.GetProjectPackages(project);
+            return await _projectsService.GetProjectPackages(project);
         }
     }
 }
