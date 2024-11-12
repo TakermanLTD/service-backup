@@ -4,6 +4,6 @@ namespace Takerman.Backups.Services.Abstraction
 {
     public interface IDashboardService
     {
-        Task<DashboardDto> GetDashboard();
+        DashboardDto GetDashboard();
     }
 }

@@ -99,7 +99,7 @@ namespace Takerman.Backups.Services
                     case BackupEntryType.Folder:
                         if (Directory.Exists(sourceDirectory))
                         {
-                            CopyFolder(sourceDirectory, Path.Combine(packageDirectory, entry.Prefix + packageName));
+                           new DirectoryInfo(sourceDirectory).CopyFolder(Path.Combine(packageDirectory, entry.Prefix + packageName));
                         }
                         else
                         {
@@ -134,33 +134,6 @@ namespace Takerman.Backups.Services
                 _ = CreateBackupPackage(package.Name);
         }
 
-        private void CopyFolder(string folder, string destFolder)
-        {
-            Directory.CreateDirectory(destFolder);
-
-            foreach (string file in Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories))
-            {
-                string fileName = Path.GetFileName(file);
-                string filePath = Path.GetDirectoryName(file.Substring(folder.Length + (folder.EndsWith("\\") ? 0 : 1)));
-                string destFilePath;
-
-                if (!string.IsNullOrEmpty(filePath))
-                {
-                    string destFolderPath = Path.Combine(destFolder, filePath);
-
-                    Directory.CreateDirectory(destFolderPath);
-
-                    destFilePath = Path.Combine(destFolderPath, fileName);
-                }
-                else
-                {
-                    destFilePath = Path.Combine(destFolder, fileName);
-                }
-
-                File.Copy(file, destFilePath);
-            }
-        }
-
         public void DeletePackage(string project, string package)
         {
             var path = Path.Combine(_commonConfig.Value.BackupsLocation, project, package);
@@ -183,7 +156,7 @@ namespace Takerman.Backups.Services
                     {
                         Name = new DirectoryInfo(dir).Name,
                         PackagesCount = files.Length,
-                        TotalSizeMB = files.Sum(x => new FileInfo(x).Length) / 1024
+                        TotalSizeMB = (files.Sum(x => new FileInfo(x).Length) / 1024) / 1024D
                     };
 
                     result.Add(entry);

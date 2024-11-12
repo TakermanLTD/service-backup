@@ -16,9 +16,12 @@ namespace Takerman.Backups.Tests.Integration
             _packagesService = _fixture.GetService<IPackagesService>(_testOutputHelper);
         }
 
-        [Fact(Skip = "It doesn't work entirely on locahost")]
-        public async Task Should_BackupDailyDatabases_When_BackgroundServiceExecutes()
+        [Fact]
+        public async Task Should_GetDashboardData_When_TheMethodIsCalled()
         {
+            var data = _dashboardService.GetDashboard();
+
+            Assert.NotNull(data);
         }
 
         [Fact(Skip = "Build")]
