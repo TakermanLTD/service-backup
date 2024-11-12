@@ -21,6 +21,9 @@ ARG SLACK_EXCEPTIONS
 ENV SLACK_WEBHOOK_URL=$SLACK_EXCEPTIONS
 
 COPY . .
+COPY /root/.ssh/id_rsa /root/.ssh/id_rsa 
+COPY /root/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub
+RUN chmod 600 /root/.ssh/id_rsa
 
 COPY ["takerman.backups.client/nuget.config", "./"]
 COPY ["takerman.backups.client/package.json", "package.json"]
