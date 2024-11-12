@@ -11,9 +11,9 @@ namespace Takerman.Backups.Services.Abstraction
         Task CreateBackupPackages();
 
         void DeletePackage(string package, string package1);
-        
+
         List<ProjectDto> GetAll();
-        
+
         List<PackageEntriesDto> GetProjectPackageEntries();
 
         Task<List<PackageDto>> GetProjectPackages(string project);
