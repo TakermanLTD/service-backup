@@ -37,18 +37,17 @@ namespace Takerman.Backups.Server.Controllers
 
         private string ExecuteShellCommand(string command)
         {
-            Process process = new Process();
+            var process = new Process();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 process.StartInfo.FileName = "bash";
-                process.StartInfo.Arguments = $"-c \"{command}\"";
             }
             else
             {
-                process.StartInfo.FileName = "/bin/bash";
-                process.StartInfo.Arguments = $"-c \"{command}\"";
+                process.StartInfo.FileName = "/bin/sh";
             }
 
+            process.StartInfo.Arguments = $"-c \"{command}\"";
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.UseShellExecute = false;
