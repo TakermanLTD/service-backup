@@ -44,7 +44,7 @@ namespace Takerman.Backups.Tests.Integration
         public async Task Should_SyncFilesToGoogleDrive_When_ThereAreNewBackups()
         {
             var file = Directory.GetFiles(Path.Combine(_commonConfig.BackupsLocation, "Printing")).First();
-            var actual = _syncService.UploadFileAsync(file);
+            var actual = await _syncService.UploadFileAsync(file);
 
             Assert.NotNull(actual);
         }
