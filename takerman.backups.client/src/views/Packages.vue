@@ -77,11 +77,9 @@ export default {
             this.getPackages();
         },
         async remove(backup) {
-            if (confirm('Are you sure?')) {
-                await fetch('/Projects/Delete?project=' + this.project + '&package=' + backup);
-                this.state = 'removed';
-                this.getPackages();
-            }
+            await fetch('/Projects/Delete?project=' + this.project + '&package=' + backup);
+            this.state = 'removed';
+            this.getPackages();
         }
     }
 }
