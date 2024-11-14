@@ -66,11 +66,13 @@ namespace Takerman.Backups.Services
             }
         }
 
-        public async Task CreateBackupPackage(string project)
+        public async Task CreateBackupPackage(string project, string prefix = "manual")
         {
             var packages = GetProjectPackageEntries();
             var package = packages.FirstOrDefault(x => x.Name.ToLower() == project.ToLower());
             var packageName = $"{package.Name}_{DateTime.Now:yyyy_MM_dd_hh_mm}";
+            if (!string.IsNullOrEmpty(prefix))
+                packageName = prefix + "_" + packageName;
             var packageDirectory = Path.Combine(_commonConfig.Value.BackupsLocation, package.Name, packageName);
 
             if (!Directory.Exists(packageDirectory))
@@ -123,12 +125,14 @@ namespace Takerman.Backups.Services
             Directory.Delete(packageDirectory, true);
         }
 
-        public async Task CreateBackupPackages()
+        public async Task CreateBackupPackages(string prefix = "manual")
         {
             var packages = GetProjectPackageEntries();
 
             foreach (var package in packages)
-                _ = CreateBackupPackage(package.Name);
+            {
+                await CreateBackupPackage(package.Name, prefix);
+            }
         }
 
         public void DeletePackage(string project, string package)
@@ -247,10 +251,10 @@ namespace Takerman.Backups.Services
 
         public void MaintainBackups()
         {
-            var packages = Directory.GetDirectories("/backups");
-            foreach (var package in packages)
+            var projects = Directory.GetDirectories(_commonConfig.Value.BackupsLocation);
+            foreach (var project in projects)
             {
-                var backupFiles = new DirectoryInfo(package)
+                var backupFiles = new DirectoryInfo(project)
                     .GetFiles("*.zip")
                     .OrderByDescending(f => f.CreationTime)
                     .ToList();

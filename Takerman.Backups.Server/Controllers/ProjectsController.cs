@@ -11,13 +11,13 @@ namespace Takerman.Backups.Server.Controllers
         [HttpGet("Backup")]
         public async Task Backup(string project)
         {
-            await _projectsService.CreateBackupPackage(project);
+            await _projectsService.CreateBackupPackage(project, "manual");
         }
 
         [HttpGet("BackupAll")]
         public async Task BackupAll()
         {
-            await _projectsService.CreateBackupPackages();
+            await _projectsService.CreateBackupPackages("manual");
         }
 
         [HttpGet("Delete")]

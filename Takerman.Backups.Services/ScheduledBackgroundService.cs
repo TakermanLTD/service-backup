@@ -16,9 +16,9 @@ namespace Takerman.Backups.Services
                 {
                     while (!stoppingToken.IsCancellationRequested)
                     {
-                        await _packagesService.CreateBackupPackages();
+                        await _packagesService.CreateBackupPackages("daily");
 
-                        // _packagesService.MaintainBackups();
+                        _packagesService.MaintainBackups();
 
                         var delay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.AddDays(1).Day, 0, 0, 0) - DateTime.Now;
 

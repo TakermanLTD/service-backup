@@ -25,7 +25,7 @@ namespace Takerman.Backups.Tests.Integration
             _environment.Setup((x) => x.EnvironmentName).Returns("Development");
         }
 
-        [Fact(Skip = "Build")]
+        [Fact]
         public async Task Should_BackupDailyDatabases_When_BackgroundServiceExecutes()
         {
             var record = await Record.ExceptionAsync(async () =>
@@ -53,7 +53,7 @@ namespace Takerman.Backups.Tests.Integration
         [Fact(Skip = "Build")]
         public async Task Should_CreateBackupPackages_When_Requested()
         {
-            var record = await Record.ExceptionAsync(_packagesService.CreateBackupPackages);
+            var record = await Record.ExceptionAsync(() => _packagesService.CreateBackupPackages());
 
             Assert.Null(record?.Message);
         }

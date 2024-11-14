@@ -6,9 +6,9 @@ namespace Takerman.Backups.Services.Abstraction
     {
         Task BackupDatabaseAsync(string databaseName, string destination, BackupEntryType type);
 
-        Task CreateBackupPackage(string project);
+        Task CreateBackupPackage(string project, string prefix = "manual");
 
-        Task CreateBackupPackages();
+        Task CreateBackupPackages(string prefix = "manual");
 
         void DeletePackage(string package, string package1);
 
