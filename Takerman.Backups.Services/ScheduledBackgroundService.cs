@@ -16,7 +16,7 @@ namespace Takerman.Backups.Services
                 {
                     while (!stoppingToken.IsCancellationRequested)
                     {
-                        await _packagesService.CreateBackupPackages("daily");
+                        await _packagesService.CreateBackupPackages("auto");
 
                         _packagesService.MaintainBackups();
 
