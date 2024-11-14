@@ -18,7 +18,7 @@ namespace Takerman.Backups.Services.Abstraction
 
         Task<List<PackageDto>> GetProjectPackages(string project);
 
-        Task MaintainBackups();
+        void MaintainBackups();
 
         Task OptimizeDatabaseAsync(string databaseName);
 

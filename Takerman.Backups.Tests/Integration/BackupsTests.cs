@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Moq;
 using Takerman.Backups.Models.Configuration;
 using Takerman.Backups.Models.DTOs;
 using Takerman.Backups.Services;
@@ -10,14 +12,17 @@ namespace Takerman.Backups.Tests.Integration
 {
     public class BackupsTests : TestBed<TestFixture>
     {
-        private readonly IPackagesService? _packagesService;
         private readonly CommonConfig _commonConfig;
+        private readonly Mock<IHostEnvironment> _environment;
+        private readonly IPackagesService? _packagesService;
 
         public BackupsTests(ITestOutputHelper testOutputHelper, TestFixture fixture)
         : base(testOutputHelper, fixture)
         {
             _packagesService = _fixture.GetService<IPackagesService>(_testOutputHelper);
             _commonConfig = _fixture.Configuration.GetSection(nameof(CommonConfig)).Get<CommonConfig>();
+            _environment = new Mock<IHostEnvironment>();
+            _environment.Setup((x) => x.EnvironmentName).Returns("Development");
         }
 
         [Fact(Skip = "Build")]
@@ -25,7 +30,8 @@ namespace Takerman.Backups.Tests.Integration
         {
             var record = await Record.ExceptionAsync(async () =>
             {
-                var autoBackup = new ScheduledBackgroundService(_packagesService, null, null);
+                _environment.Setup((x) => x.EnvironmentName).Returns("Production");
+                var autoBackup = new ScheduledBackgroundService(_packagesService, null, _environment.Object);
 
                 await autoBackup.StartAsync(CancellationToken.None);
             });
@@ -53,9 +59,9 @@ namespace Takerman.Backups.Tests.Integration
         }
 
         [Fact(Skip = "Build")]
-        public async Task Should_MaintainBackups_When_MaintenanceStarts()
+        public void Should_MaintainBackups_When_MaintenanceStarts()
         {
-            var record = await Record.ExceptionAsync(_packagesService.MaintainBackups);
+            var record = Record.Exception(_packagesService.MaintainBackups);
 
             Assert.Null(record?.Message);
         }

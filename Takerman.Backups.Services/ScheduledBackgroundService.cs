@@ -18,9 +18,11 @@ namespace Takerman.Backups.Services
                     {
                         await _packagesService.CreateBackupPackages();
 
-                        var millisecondsToDelay = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.AddDays(1).Day, 3, 0, 0) - DateTime.Now).Milliseconds;
-                        
-                        await Task.Delay(millisecondsToDelay, stoppingToken);
+                        // _packagesService.MaintainBackups();
+
+                        var delay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.AddDays(1).Day, 0, 0, 0) - DateTime.Now;
+
+                        await Task.Delay(delay, stoppingToken);
                     }
                 }
             }

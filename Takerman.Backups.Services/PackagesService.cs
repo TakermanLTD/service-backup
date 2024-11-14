@@ -245,7 +245,7 @@ namespace Takerman.Backups.Services
             return result?.Count > 0;
         }
 
-        public async Task MaintainBackups()
+        public void MaintainBackups()
         {
             var packages = Directory.GetDirectories("/backups");
             foreach (var package in packages)
