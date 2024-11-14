@@ -260,8 +260,8 @@ namespace Takerman.Backups.Services
                     .ToList();
 
                 var dailyBackups = backupFiles.Take(10).ToList();
-                var monthlyBackups = backupFiles.GroupBy(x => x.CreationTime.Month).LastOrDefault();
-                var yearlyBackups = backupFiles.GroupBy(x => x.CreationTime.Year).LastOrDefault();
+                var monthlyBackups = backupFiles.GroupBy(x => x.CreationTime.Month).FirstOrDefault();
+                var yearlyBackups = backupFiles.GroupBy(x => x.CreationTime.Year).FirstOrDefault();
                 var backupsToKeep = dailyBackups;
 
                 if (monthlyBackups != null && monthlyBackups.Any())
