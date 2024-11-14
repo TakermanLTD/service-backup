@@ -57,7 +57,7 @@ namespace Takerman.Backups.Services
                 }
                 else
                 {
-                    _logger.LogWarning("**Backups**: Tried to backup a microsoft database for a package, but the database does not exits");
+                    _logger.LogWarning("*Backups Service*: Tried to backup a microsoft database for a package, but the database does not exits");
                 }
             }
             catch (Exception ex)
@@ -100,7 +100,7 @@ namespace Takerman.Backups.Services
                         }
                         else
                         {
-                            _logger.LogWarning("**Backups**: Tried to copy files for a package, but the files does not exits");
+                            _logger.LogWarning("*Backups Service*: Tried to copy files for a package, but the files does not exits");
                         }
                         break;
 
@@ -112,7 +112,7 @@ namespace Takerman.Backups.Services
                         }
                         else
                         {
-                            _logger.LogWarning("**Backups**: Tried to copy files for a package, but the files does not exits");
+                            _logger.LogWarning("*Backups Service*: Tried to copy files for a package, but the files does not exits");
                         }
                         break;
                 }
@@ -301,11 +301,11 @@ namespace Takerman.Backups.Services
             }
             catch (SqlException ex)
             {
-                _logger.LogError(ex, $"**Backups Service**: {ex.Message}");
+                _logger.LogError(ex, $"*Backups Service*: {ex.Message}");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"**Backups Service**: {ex.Message}");
+                _logger.LogError(ex, $"*Backups Service*: {ex.Message}");
             }
         }
 

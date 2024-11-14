@@ -18,7 +18,7 @@ namespace Takerman.Backups.Services
                     {
                         await _packagesService.CreateBackupPackages();
 
-                        var minutesToDelay = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 3, 0, 0) - DateTime.Now).Minutes;
+                        var minutesToDelay = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.AddDays(1).Day, 3, 0, 0) - DateTime.Now).Minutes;
                         
                         await Task.Delay(minutesToDelay, stoppingToken);
                     }
@@ -26,7 +26,7 @@ namespace Takerman.Backups.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "**Backups Service**: " + ex.GetMessage());
+                _logger.LogError(ex, "*Backups Service*: " + ex.GetMessage());
             }
         }
     }
