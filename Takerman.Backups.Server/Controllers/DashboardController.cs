@@ -7,7 +7,7 @@ namespace Takerman.Backups.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DashboardController(ILogger<DashboardController> _logger, ISyncService _syncService, IDashboardService _dashboardService) : ControllerBase
+    public class DashboardController(ILogger<DashboardController> _logger, IDashboardService _dashboardService) : ControllerBase
     {
         [HttpGet("Get")]
         public async Task<DashboardDto> Get()

@@ -5,7 +5,7 @@ using Takerman.Extensions;
 
 namespace Takerman.Backups.Services
 {
-    public class ScheduledBackgroundService(IPackagesService _packagesService, ISyncService _syncService, ILogger<ScheduledBackgroundService> _logger,
+    public class ScheduledBackgroundService(IPackagesService _packagesService, ILogger<ScheduledBackgroundService> _logger,
         IHostEnvironment _hostEnvironment) : BackgroundService
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -18,9 +18,9 @@ namespace Takerman.Backups.Services
                     {
                         await _packagesService.CreateBackupPackages();
 
-                        // _syncService.Sync();
-
-                        await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
+                        var minutesToDelay = (new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 3, 0, 0) - DateTime.Now).Minutes;
+                        
+                        await Task.Delay(minutesToDelay, stoppingToken);
                     }
                 }
             }

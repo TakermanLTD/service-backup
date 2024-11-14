@@ -8,7 +8,6 @@
         </div>
         <div class="row">
             <button @click="backupAll()" class="col btn btn-info">backup all</button>
-            <button @click="sync()" class="col btn btn-info">sync</button>
         </div>
         <div class="row">
             <table class="table table-borderless">
@@ -76,11 +75,6 @@ export default {
             await fetch('Projects/Backup?project=' + name);
             this.state = 'backup finished';
             await this.getAll();
-        },
-        async sync() {
-            this.state = 'loading';
-            await fetch('Projects/Sync');
-            this.state = 'sync finished';
         }
     }
 }

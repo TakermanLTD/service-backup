@@ -17,7 +17,6 @@ namespace Takerman.Backups.Tests
                 .Configure<CommonConfig>(configuration.GetSection(nameof(CommonConfig)))
                 .Configure<GoogleDriveConfig>(configuration.GetSection(nameof(GoogleDriveConfig)))
                 .AddTransient<IDashboardService, DashboardService>()
-                .AddTransient<ISyncService, SyncService>()
                 .AddTransient<IPackagesService, PackagesService>();
         }
 

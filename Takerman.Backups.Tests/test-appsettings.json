@@ -10,11 +10,6 @@
     "MicrosoftSqlConnection": "Data Source=takerman.net,5433;Initial Catalog=master;Integrated Security=False;Persist Security Info=False;User ID=takerman;Password=Hakerman91!;Trust Server Certificate=True",
     "MySqlConnection": "Server=takerman.net;Port=5306;Database=mysql;Uid=root;Pwd=Hakerman91!;"
   },
-  "GoogleDriveConfig": {
-    "ClientId": "827940900757-2j6fqlahs94pjt7r697kkgqdu4lo3c24.apps.googleusercontent.com",
-    "ClientSecret": "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",
-    "RedirectUri": "https://localhost:5181"
-  },
   "Logging": {
     "LogLevel": {
       "Default": "Information",

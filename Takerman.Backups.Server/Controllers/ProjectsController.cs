@@ -6,7 +6,7 @@ namespace Takerman.Backups.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProjectsController(ILogger<ProjectsController> _logger, IPackagesService _projectsService, ISyncService _syncService) : ControllerBase
+    public class ProjectsController(ILogger<ProjectsController> _logger, IPackagesService _projectsService) : ControllerBase
     {
         [HttpGet("Backup")]
         public async Task Backup(string project)

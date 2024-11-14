@@ -26,7 +26,6 @@ builder.Services.Configure<CommonConfig>(builder.Configuration.GetSection(nameof
 builder.Services.Configure<GoogleDriveConfig>(builder.Configuration.GetSection(nameof(GoogleDriveConfig)));
 builder.Services.AddTransient<IPackagesService, PackagesService>();
 builder.Services.AddTransient<IDashboardService, DashboardService>();
-builder.Services.AddTransient<ISyncService, SyncService>();
 builder.Services.AddHostedService<ScheduledBackgroundService>();
 builder.Services.AddHsts(options =>
 {
