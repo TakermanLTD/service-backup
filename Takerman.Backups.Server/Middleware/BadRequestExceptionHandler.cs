@@ -13,7 +13,7 @@ namespace Takerman.Backups.Server.Middleware
                 return false;
             }
 
-            _logger.LogError(badRequestException, $"**BackupsService**: {exception.GetMessage()}");
+            _logger.LogError(exception, $"*Backups Service*: `{exception.GetMessage()}`");
 
             var problemDetails = new ProblemDetails
             {

@@ -8,7 +8,7 @@ namespace Takerman.Backups.Server.Middleware
     {
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
-            _logger.LogError(exception, $"**Backups Service**: {exception.GetMessage()}");
+            _logger.LogError(exception, $"*Backups Service*: `{exception.GetMessage()}`");
 
             var problemDetails = new ProblemDetails
             {
