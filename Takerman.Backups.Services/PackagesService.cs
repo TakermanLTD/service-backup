@@ -98,7 +98,7 @@ namespace Takerman.Backups.Services
                         var sourceDirectory = Path.Combine(_commonConfig.Value.VolumesLocation, entry.Source);
                         if (Directory.Exists(sourceDirectory))
                         {
-                            new DirectoryInfo(sourceDirectory).CopyFolder(Path.Combine(packageDirectory, entry.Prefix + packageName));
+                            new DirectoryInfo(sourceDirectory).CopyFolder(Path.Combine(packageDirectory, entry.Prefix + entry.Source + "_" + packageName));
                         }
                         else
                         {
